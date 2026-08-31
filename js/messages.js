@@ -1,0 +1,4 @@
+import {getSupabase,assertOk} from './supabase.js';
+export async function listConversation(teacherId,studentId,page=0,size=30){return assertOk(await (await getSupabase()).from('private_messages').select('*').eq('teacher_id',teacherId).eq('student_id',studentId).order('created_at',{ascending:false}).range(page*size,(page+1)*size-1));}
+export async function sendMessage({teacher_id,student_id,message}){const s=await getSupabase();const {data:{user}}=await s.auth.getUser();return assertOk(await s.from('private_messages').insert({teacher_id,student_id,sender_id:user.id,message}).select().single());}
+export async function editOwnMessage(id,message){return assertOk(await (await getSupabase()).from('private_messages').update({message,edited_at:new Date().toISOString()}).eq('id',id).select().single());}

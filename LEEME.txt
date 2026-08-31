@@ -1,0 +1,14 @@
+SUMANDO MINUTOS - ARCHIVOS PARA NETLIFY
+
+Opcion rapida:
+1. Entra a https://app.netlify.com/drop
+2. Arrastra esta carpeta completa o el archivo ZIP entregado.
+3. Espera a que Netlify publique el sitio.
+
+El archivo principal ya se llama index.html.
+No elimines las imagenes de Ruben Coach.
+
+Nota:
+Las cuentas, actividades y publicaciones se guardan en el navegador de cada
+dispositivo mediante almacenamiento local. Para compartir los mismos datos
+entre distintos dispositivos sera necesario conectar una base de datos.

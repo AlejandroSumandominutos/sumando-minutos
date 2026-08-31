@@ -1,0 +1,3 @@
+-- SOLO DESARROLLO. No se insertan usuarios ficticios en producción.
+-- Los usuarios deben crearse con Supabase Auth. Después se pueden asociar:
+-- insert into public.teacher_students(teacher_id,student_id) values ('UUID_DOCENTE','UUID_ESTUDIANTE');

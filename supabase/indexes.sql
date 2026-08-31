@@ -1,0 +1,13 @@
+create index activities_user_idx on public.activities(user_id);
+create index activities_date_idx on public.activities(activity_date desc);
+create index activities_sport_idx on public.activities(sport);
+create index activities_user_date_idx on public.activities(user_id,activity_date desc);
+create index activities_sport_date_idx on public.activities(sport,activity_date desc);
+create index community_posts_created_idx on public.community_posts(created_at desc);
+create index community_posts_visibility_created_idx on public.community_posts(visibility,created_at desc);
+create index comments_post_created_idx on public.comments(post_id,created_at);
+create index private_messages_student_idx on public.private_messages(student_id,created_at desc);
+create index private_messages_teacher_idx on public.private_messages(teacher_id,created_at desc);
+create index teacher_students_teacher_idx on public.teacher_students(teacher_id);
+create index teacher_students_student_idx on public.teacher_students(student_id);
+create index goals_user_status_idx on public.goals(user_id,status);
