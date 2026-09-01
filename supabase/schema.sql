@@ -89,6 +89,7 @@ create table public.goals (
   target_value numeric(12,2) not null check (target_value > 0),
   current_value numeric(12,2) not null default 0 check (current_value >= 0),
   start_date date not null default current_date, end_date date,
+  plan jsonb,
   status text not null default 'active' check (status in ('active','completed','cancelled')),
   created_at timestamptz not null default now()
 );

@@ -3085,6 +3085,15 @@
         grid-template-columns: 1fr;
       }
     }
+    .profile-avatar-panel{display:flex;align-items:center;gap:24px;padding:24px;margin-bottom:24px;background:#fff;border:1px solid #d8e0ef;border-radius:18px}
+    .profile-avatar-panel img{width:140px;height:140px;border-radius:50%;object-fit:cover;border:5px solid #d4af37;background:#e8eef8}
+    .profile-avatar-panel p{margin:6px 0 16px;color:#53627a}.profile-avatar-panel .btn{margin:4px 8px 4px 0}
+    .training-plan-wrap{margin-top:18px;overflow-x:auto}.training-plan-wrap:empty{display:none}
+    .training-plan-table{width:100%;min-width:760px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
+    .training-plan-table th,.training-plan-table td{padding:11px;border:1px solid #d8e0ef;text-align:left;vertical-align:top}
+    .training-plan-table th{background:#0a2a66;color:#fff}.training-plan-note{margin:10px 0;color:#53627a;font-size:.9rem}
+    [aria-busy="true"]{opacity:.68;pointer-events:none}
+    @media(max-width:700px){.profile-avatar-panel{align-items:flex-start;flex-direction:column}.profile-avatar-panel img{width:110px;height:110px}}
   </style>
 </head>
 <body>
@@ -3341,6 +3350,17 @@
           y herramientas para docentes en una interfaz responsive para celular, tablet y computadora.
         </p>
       </div>
+
+      <article class="profile-avatar-panel student-only" id="profileAvatarPanel">
+        <img id="profileAvatarImage" alt="Foto de perfil del usuario" loading="lazy">
+        <div>
+          <h3>Foto de identificación</h3>
+          <p>Actualiza tu fotografía de perfil. La imagen anterior se eliminará después de guardar la nueva.</p>
+          <input id="profileAvatarInput" type="file" accept="image/*" hidden>
+          <button class="btn" id="chooseProfileAvatarBtn" type="button">Actualizar foto de perfil</button>
+          <button class="btn secondary" id="saveProfileAvatarBtn" type="button" disabled>Guardar nueva foto</button>
+        </div>
+      </article>
 
       <div class="feature-grid">
         <article class="feature-panel">
@@ -3753,12 +3773,14 @@
             <label class="field">Fecha límite<input id="goalDeadline" type="date"></label>
           </div>
           <p class="lead" id="goalRecommendation"></p>
+          <div class="training-plan-wrap" id="trainingPlanPreview"></div>
           <button class="btn" id="generateGoalBtn" type="button">Generar recomendación</button>
           <button class="btn secondary" id="saveGoalBtn" type="button">Aceptar objetivo</button>
         </div>
         <div class="current-goal">
           <h3>Objetivo actual</h3>
           <div id="currentGoalContent">Aún no has establecido un objetivo.</div>
+          <div class="training-plan-wrap" id="currentTrainingPlan"></div>
         </div>
       </div>
     </div>

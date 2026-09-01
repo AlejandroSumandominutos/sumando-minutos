@@ -91,6 +91,7 @@ on conflict(id) do update set public=excluded.public,file_size_limit=excluded.fi
 
 create policy storage_avatar_insert on storage.objects for insert to authenticated with check(bucket_id='avatars' and (storage.foldername(name))[1]=auth.uid()::text);
 create policy storage_avatar_update on storage.objects for update to authenticated using(bucket_id='avatars' and owner_id=auth.uid()::text);
+create policy storage_avatar_delete on storage.objects for delete to authenticated using(bucket_id='avatars' and owner_id=auth.uid()::text);
 create policy storage_community_insert on storage.objects for insert to authenticated with check(bucket_id='community' and (storage.foldername(name))[1]=auth.uid()::text);
 create policy storage_community_delete on storage.objects for delete to authenticated using(bucket_id='community' and owner_id=auth.uid()::text);
 create policy storage_evidence_insert on storage.objects for insert to authenticated with check(bucket_id='evidence' and (storage.foldername(name))[1]=auth.uid()::text);
