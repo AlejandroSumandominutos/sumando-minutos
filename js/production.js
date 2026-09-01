@@ -192,6 +192,7 @@ document.querySelectorAll('[data-sport]').forEach(b=>b.addEventListener('click',
 let rankingRefreshTimer;
 function requestRankingRefresh(){clearTimeout(rankingRefreshTimer);rankingRefreshTimer=setTimeout(()=>renderRankings().catch(error=>toast(`❌ ${error.message}`,'error')),180);}
 document.addEventListener('click',event=>{const button=event.target.closest('[data-section="rankings"],[data-section="logros"]');if(!button)return;button.setAttribute('aria-busy','true');requestRankingRefresh();setTimeout(()=>button.removeAttribute('aria-busy'),900);},true);
+document.addEventListener('click',event=>{const button=event.target.closest('[data-section="blog"]');if(!button)return;button.setAttribute('aria-busy','true');setTimeout(()=>renderPosts().finally(()=>button.removeAttribute('aria-busy')),180);},true);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&context.session)requestRankingRefresh();});
 window.addEventListener('pageshow',()=>{if(context.session)requestRankingRefresh();});
 $('communityFeed')?.addEventListener('submit',async e=>{const id=e.target.dataset.cloudComment;if(!id)return;e.preventDefault();e.stopImmediatePropagation();try{await comment(id,e.target.elements.comment.value.trim());await renderPosts();toast('✅ Comentario publicado','success');}catch(error){toast(`❌ ${error.message}`,'error');}},true);
