@@ -4012,7 +4012,11 @@
         { id: "nat-2", question: "¿Qué debe coordinarse con las brazadas?", options: ["La respiración", "El calzado", "La raqueta", "El balón"], correct: 0 }
       ]
     };
-    window.expandQuizLibrary(quizLibrary);
+    if (typeof window.expandQuizLibrary === "function") {
+      window.expandQuizLibrary(quizLibrary);
+    } else {
+      console.warn("El banco ampliado de quiz no se cargó; se conserva el banco básico.");
+    }
 
     const coachVideoLibrary = {
       "Running": { title: "Técnica de running para principiantes", description: "Postura, pisada, respiración y ritmo inicial.", query: "técnica running principiantes" },
