@@ -5978,13 +5978,29 @@
         : `<div class="empty-feed">No tienes publicaciones privadas.</div>`;
     }
 
+    const UI_STATE = {
+      section: "sumandoMinutosUltimaSeccion",
+      sport: "sumandoMinutosUltimoDeporte"
+    };
+
+    function restoreLastNavigation() {
+      const section = sessionStorage.getItem(UI_STATE.section);
+      if (!section) return false;
+      mostrarSeccion(section);
+      const sport = sessionStorage.getItem(UI_STATE.sport);
+      if (section === "deportes" && sport && sportData[sport] && obtenerRolUsuario() !== "docente") {
+        renderSport(sport);
+      }
+      return true;
+    }
+
     function enterApp(showMessage = true) {
       const user = getActiveUser();
       if (!user) return;
       document.body.classList.add("logged-in");
       updateUserInterface();
       mostrarMenuSegunRol();
-      redirigirSegunRol();
+      if (!restoreLastNavigation()) redirigirSegunRol();
       if (getUserAssistantData().isOpen) abrirChatIA();
       else minimizarChatIA();
       setRubenCoachState("greeting");
@@ -6037,6 +6053,7 @@
       const teacherSections = ["inicio", "deportes", "blog", "logros", "estadisticas", "observaciones"];
       const allowedSections = role === "docente" ? teacherSections : studentSections;
       if (!allowedSections.includes(seccion)) seccion = role === "docente" ? "estadisticas" : "inicio";
+      sessionStorage.setItem(UI_STATE.section, seccion);
 
       (map[seccion] || map.inicio).forEach(id => {
         const element = document.getElementById(id);
@@ -6086,6 +6103,8 @@
       const data = sportData[name];
       if (!data) return;
       currentSport = name;
+      sessionStorage.setItem(UI_STATE.section, "deportes");
+      sessionStorage.setItem(UI_STATE.sport, name);
       currentQuizIndex = 0;
       const detail = document.getElementById("sportDetail");
       detail.classList.add("is-changing");
@@ -6321,6 +6340,8 @@
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem(STORAGE.session);
+      sessionStorage.removeItem(UI_STATE.section);
+      sessionStorage.removeItem(UI_STATE.sport);
       document.body.classList.remove("logged-in");
       document.body.classList.remove("teacher-session");
       history.replaceState(null, "", location.pathname);
@@ -6645,10 +6666,6 @@
       if (getSession() === "Alex") localStorage.removeItem(STORAGE.session);
     }
     renderizarRankings();
-
-    if (location.search) {
-      history.replaceState(null, "", location.pathname + location.hash);
-    }
 
     document.getElementById("activityDate").value = localDateKey();
     renderizarFormularioPorDeporte(currentSport);
