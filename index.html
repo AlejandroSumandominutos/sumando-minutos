@@ -3796,6 +3796,7 @@
   </footer>
   </div>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script src="/js/quiz-bank.js"></script>
   <script>
     const STORAGE = {
       users: "sumandoMinutosUsuarios",
@@ -4011,6 +4012,7 @@
         { id: "nat-2", question: "¿Qué debe coordinarse con las brazadas?", options: ["La respiración", "El calzado", "La raqueta", "El balón"], correct: 0 }
       ]
     };
+    window.expandQuizLibrary(quizLibrary);
 
     const coachVideoLibrary = {
       "Running": { title: "Técnica de running para principiantes", description: "Postura, pisada, respiración y ritmo inicial.", query: "técnica running principiantes" },
@@ -4742,6 +4744,12 @@
       `).join("");
     }
 
+    function getQuizStartIndex(sport) {
+      const saved = Number(sessionStorage.getItem(`sumandoMinutosQuizCursor:${sport}`) || 0);
+      const total = quizLibrary[sport]?.length || 1;
+      return Math.max(0, saved % total);
+    }
+
     function renderQuiz(sport, index = 0) {
       const questions = quizLibrary[sport] || [];
       if (!questions.length) return;
@@ -4757,6 +4765,7 @@
         "Natación": "🏊"
       };
       currentQuizIndex = Math.max(0, Math.min(index, questions.length - 1));
+      sessionStorage.setItem(`sumandoMinutosQuizCursor:${sport}`, String(currentQuizIndex));
       const quiz = questions[currentQuizIndex];
       document.getElementById("quizSportIcon").textContent = sportIcons[sport] || "🏅";
       document.getElementById("quizSport").textContent = sport;
@@ -6113,7 +6122,7 @@
         document.getElementById("sportPhrase").textContent = data.phrase;
         document.getElementById("sportDailyTip").textContent = data.dailyTip;
         document.getElementById("sportTips").innerHTML = data.tips.map(item => `<li>${item}</li>`).join("");
-        renderQuiz(name, 0);
+        renderQuiz(name, getQuizStartIndex(name));
         document.getElementById("sportVideo").href = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " técnica entrenamiento")}`;
         detail.style.setProperty("--sport-image", `url("${data.image}")`);
         renderEvidence(name);
@@ -6673,7 +6682,7 @@
     actualizarContadoresCalorias();
     updateDailyMotivation();
     renderEvidence(currentSport);
-    renderQuiz(currentSport, 0);
+    renderQuiz(currentSport, getQuizStartIndex(currentSport));
 
     if (getSession() && getActiveUser()) {
       enterApp(false);
