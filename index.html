@@ -3089,6 +3089,9 @@
     .profile-avatar-panel img{width:140px;height:140px;border-radius:50%;object-fit:cover;border:5px solid #d4af37;background:#e8eef8}
     .profile-avatar-panel p{margin:6px 0 16px;color:#53627a}.profile-avatar-panel .btn{margin:4px 8px 4px 0}
     .training-plan-wrap{margin-top:18px;overflow-x:auto}.training-plan-wrap:empty{display:none}
+    .profile-data-card img{width:120px;height:120px;object-fit:cover;border-radius:14px;margin-bottom:10px}
+    .rating-control{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
+    #whatsappReminderPanel .field{max-width:420px;margin:12px 0}
     .training-plan-table{width:100%;min-width:760px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
     .training-plan-table th,.training-plan-table td{padding:11px;border:1px solid #d8e0ef;text-align:left;vertical-align:top}
     .training-plan-table th{background:#0a2a66;color:#fff}.training-plan-note{margin:10px 0;color:#53627a;font-size:.9rem}
@@ -3361,6 +3364,16 @@
           <button class="btn secondary" id="saveProfileAvatarBtn" type="button" disabled>Guardar nueva foto</button>
         </div>
       </article>
+      <article class="profile-avatar-panel student-only" id="whatsappReminderPanel">
+        <div class="avatar-fallback" aria-hidden="true">WA</div>
+        <div>
+          <h3>Recordatorio diario por WhatsApp</h3>
+          <p>Si a las 5:00 p. m. no registraste actividad, podemos enviarte “Recuerda que debes SUMAR MINUTOS hoy”.</p>
+          <label class="field">Número con código de país<input id="whatsappPhone" type="tel" placeholder="+521234567890" autocomplete="tel"></label>
+          <label><input id="whatsappEnabled" type="checkbox"> Acepto recibir este recordatorio automático</label>
+          <button class="btn" id="saveWhatsappReminderBtn" type="button">Guardar preferencia</button>
+        </div>
+      </article>
 
       <div class="feature-grid">
         <article class="feature-panel">
@@ -3387,11 +3400,8 @@
       <h3 class="private-heading">Mis publicaciones privadas</h3>
       <div class="private-posts" id="privatePosts"></div>
 
-      <h3 class="private-heading">Lecturas guardadas</h3>
+      <h3 class="private-heading">Evidencias guardadas</h3>
       <div class="saved-readings" id="savedReadings"></div>
-
-      <h3 class="private-heading">📺 Mis videos guardados</h3>
-      <div class="saved-videos" id="savedVideos"></div>
 
       <h3 class="private-heading">Progreso educativo</h3>
       <div class="education-summary">
@@ -3617,6 +3627,7 @@
             <div class="activity-history">
               <h4>Mis registros</h4>
               <p class="post-meta">Ordenados del más reciente al más antiguo.</p>
+              <button class="btn secondary" id="printActivityRecordsBtn" type="button" disabled>Imprimir / Guardar PDF</button>
               <div class="records-scroll" id="activityRecords"></div>
             </div>
           </div>
@@ -3776,6 +3787,7 @@
           <div class="training-plan-wrap" id="trainingPlanPreview"></div>
           <button class="btn" id="generateGoalBtn" type="button">Generar recomendación</button>
           <button class="btn secondary" id="saveGoalBtn" type="button">Aceptar objetivo</button>
+          <button class="btn secondary" id="printGoalPlanBtn" type="button">Imprimir / Guardar PDF</button>
         </div>
         <div class="current-goal">
           <h3>Objetivo actual</h3>
@@ -4876,7 +4888,6 @@
           <p class="chat-video-description">${escapeHtml(video.description)}</p>
           <div class="chat-video-actions">
             <a href="${escapeHtml(videoSearchUrl(video))}" target="_blank" rel="noopener noreferrer">▶ Ver en YouTube</a>
-            <button type="button" data-save-coach-video="${escapeHtml(video.id)}">⭐ Guardar video</button>
           </div>
         </div>
       `;
@@ -4887,6 +4898,7 @@
     function renderSavedVideos() {
       const user = getActiveUser();
       const container = document.getElementById("savedVideos");
+      if (!container) return;
       if (!user || !container) return;
       const saved = getSavedVideos()
         .filter(item => item.username === user.username)

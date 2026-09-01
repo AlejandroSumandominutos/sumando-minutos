@@ -5,9 +5,20 @@
 [functions]
   node_bundler = "esbuild"
 
+[functions."whatsapp-reminders"]
+  schedule = "0 23 * * *"
+
+[functions."weekly-awards"]
+  schedule = "0 19 * * 5"
+
 [[redirects]]
   from = "/api/coach"
   to = "/.netlify/functions/ruben-coach"
+  status = 200
+
+[[redirects]]
+  from = "/api/evidence"
+  to = "/.netlify/functions/evidence-articles"
   status = 200
 
 [[redirects]]
