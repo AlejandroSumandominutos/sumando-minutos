@@ -1,5 +1,5 @@
 import { getSupabase } from './supabase.js';
-import { signUp, signIn, signOut, sendPasswordReset, updatePassword, currentContext } from './auth.js';
+import { signUp, signIn, signOut, sendPasswordReset, updatePassword, currentContext } from './auth.js?v=20260906-3';
 import { calculateCalories, createActivity, listMyActivities } from './activities.js';
 import { teacherStudents } from './data.js';
 import { saveGoal, saveQuiz, saveArticle } from './data.js';
@@ -56,7 +56,7 @@ async function refreshContext(){ context=await currentContext(); applyContext();
 
 async function onLogin(event){
   event.preventDefault(); event.stopImmediatePropagation(); const form=event.currentTarget; const button=form.querySelector('button[type=submit]'); busy(button,true,'Ingresando…');
-  try{ await signIn(form.elements.usuario.value,form.elements.password.value); await refreshContext(); toast('✅ Sesión iniciada','success'); window.scrollTo({top:0,behavior:'smooth'}); }
+  try{const identifier=form.elements.usuario.value.trim(),password=form.elements.password.value;if(identifier.includes('@')){const s=await getSupabase(),{error}=await s.auth.signInWithPassword({email:identifier,password});if(error)throw error;}else await signIn(identifier,password);await refreshContext();toast('✅ Sesión iniciada','success');window.scrollTo({top:0,behavior:'smooth'});}
   catch(error){toast(`❌ ${error.message}`,'error');} finally{busy(button,false);}
 }
 async function onRegister(event){
