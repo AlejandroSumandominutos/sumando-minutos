@@ -3091,12 +3091,10 @@
     .training-plan-wrap{margin-top:18px;overflow-x:auto}.training-plan-wrap:empty{display:none}
     .profile-data-card img{width:120px;height:120px;object-fit:cover;border-radius:14px;margin-bottom:10px}
     .rating-control{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
-    #whatsappReminderPanel .field{max-width:420px;margin:12px 0}
     #openRegisterBtn{display:inline-flex;justify-content:center;align-items:center;padding:14px 22px;border:2px solid #f4c934;border-radius:12px;background:#f4c934;color:#08275f;font-size:1.05rem;font-weight:900;box-shadow:0 8px 22px rgba(244,201,52,.3);text-decoration:none}
     #openRegisterBtn:hover,#openRegisterBtn:focus-visible{background:#fff1a9;transform:translateY(-1px)}
     .record-tools{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:10px 0 14px}.record-tools .field{margin:0;min-width:155px}.record-period{font-weight:700;color:#53627a}
     .community-post .post-author{display:flex;align-items:center;gap:9px}.post-author-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #d4af37;background:#0a2a66;color:white;display:grid;place-items:center;font-weight:800;flex:none}.post-author-copy{display:flex;flex-direction:column;gap:1px}
-    .status-pill{display:inline-block;margin:8px 8px 8px 0;padding:7px 11px;border-radius:999px;background:#edf2fb;color:#17386f;font-weight:800}.status-pill.active{background:#dcf7e8;color:#087044}.status-pill.error{background:#ffe4e4;color:#9a2424}
     #miniquiz .field{color:#08285f;font-weight:800}#miniquiz .field select{color:#08285f;background:#fff;border:1px solid #b9c7dc}
     .training-plan-table{width:100%;min-width:760px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
     .training-plan-table th,.training-plan-table td{padding:11px;border:1px solid #d8e0ef;text-align:left;vertical-align:top}
@@ -3371,18 +3369,6 @@
           <button class="btn secondary" id="saveProfileAvatarBtn" type="button" disabled>Guardar nueva foto</button>
         </div>
       </article>
-      <article class="profile-avatar-panel student-only" id="whatsappReminderPanel">
-        <div class="avatar-fallback" aria-hidden="true">WA</div>
-        <div>
-          <h3>Recordatorio diario por WhatsApp</h3>
-          <p>Si a las 5:00 p. m. no registraste actividad, podemos enviarte “Recuerda que debes SUMAR MINUTOS hoy”.</p>
-          <label class="field">Número con código de país<input id="whatsappPhone" type="tel" placeholder="+521234567890" autocomplete="tel"></label>
-          <label><input id="whatsappEnabled" type="checkbox"> Acepto recibir este recordatorio automático</label>
-          <button class="btn" id="saveWhatsappReminderBtn" type="button">Guardar preferencia</button>
-          <button class="btn secondary" id="testWhatsappReminderBtn" type="button">Enviar recordatorio de prueba</button>
-          <div><span class="status-pill" id="whatsappStatus">Configuración incompleta</span><span id="whatsappLastSent">Último envío: ninguno</span></div>
-        </div>
-      </article>
       <article class="profile-avatar-panel student-only" id="securityQuestionPanel">
         <div class="avatar-fallback" aria-hidden="true">🔐</div>
         <div>
@@ -3559,25 +3545,7 @@
         </p>
       </div>
 
-      <div class="teacher-report teacher-only">
-        <h3>📄 Reporte deportivo</h3>
-        <div class="report-filters">
-          <label class="field">Estudiante<select id="sportReportStudent"></select></label>
-          <label class="field">Deporte<select id="sportReportSport"><option value="">Todos los deportes</option></select></label>
-        </div>
-        <div id="sportReportContent"></div>
-        <div class="teacher-evidence-panel">
-          <h3>📸 Evidencias deportivas</h3>
-          <label class="toggle-row">
-            <input id="evidenceRequiredToggle" type="checkbox">
-            <span>Evidencia fotográfica obligatoria</span>
-          </label>
-          <p class="lead">Al activarla, ninguna actividad podrá registrarse sin fotografía.</p>
-          <div class="evidence-list" id="teacherEvidenceList"></div>
-        </div>
-      </div>
-
-      <div class="sports-grid student-only">
+      <div class="sports-grid">
         <button class="sport-card" data-sport="Gimnasio" style="--image:url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=85')"><span>Fuerza</span><h3>Gimnasio</h3></button>
         <button class="sport-card" data-sport="Calistenia" style="--image:url('https://images.unsplash.com/photo-1599058917212-d750089bc07e?auto=format&fit=crop&w=900&q=85')"><span>Control corporal</span><h3>Calistenia</h3></button>
         <button class="sport-card" data-sport="Running" style="--image:url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=900&q=85')"><span>Resistencia</span><h3>Running</h3></button>
@@ -3589,7 +3557,7 @@
         <button class="sport-card" data-sport="Natación" style="--image:url('https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=900&q=85')"><span>Técnica</span><h3>Natación</h3></button>
       </div>
 
-      <article class="sport-detail student-only" id="sportDetail" style="--sport-image:url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1200&q=85')">
+      <article class="sport-detail" id="sportDetail" style="--sport-image:url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1200&q=85')">
         <div class="sport-hero">
           <p class="kicker">Página exclusiva del deporte</p>
           <h3 id="sportTitle">Running</h3>
@@ -3736,11 +3704,6 @@
       </div>
       <div class="medal-showcase" id="weeklyMedals"></div>
       <button class="btn secondary" id="printMedalBoardBtn" type="button">Imprimir medallero / Guardar PDF</button>
-      <div class="teacher-report teacher-only">
-        <h3>📄 Reporte de medallas</h3>
-        <button class="btn secondary" id="printMedalReportBtn" type="button">Imprimir reporte / Guardar PDF</button>
-        <div id="medalReportContent"></div>
-      </div>
     </div>
   </section>
 
@@ -4438,10 +4401,7 @@
       }).join("");
     }
 
-    function moverReportesADeportesYMedallas() {
-      renderSportReport();
-      renderMedalReport();
-    }
+    function moverReportesADeportesYMedallas() {}
 
     function ocultarBotonesDocenteEliminados() {
       document.querySelectorAll('[data-section="estudiantes"], [data-section="reportes"], [data-section="configuracion"], [data-section="panel-docente"]').forEach(button => button.remove());
@@ -4470,10 +4430,7 @@
 
     function reorganizarFuncionesDocente() {
       if (!validarRolDocenteAntesDeMostrar()) return;
-      renderSportReport();
-      renderMedalReport();
       renderTeacherStatistics();
-      renderTeacherEvidence();
       renderTemporaryAccessStudents();
     }
 
@@ -6112,7 +6069,7 @@
       if (!section) return false;
       mostrarSeccion(section);
       const sport = sessionStorage.getItem(UI_STATE.sport);
-      if (section === "deportes" && sport && sportData[sport] && obtenerRolUsuario() !== "docente") {
+      if (section === "deportes" && sport && sportData[sport]) {
         renderSport(sport);
       }
       return true;
@@ -6190,15 +6147,9 @@
       });
 
       if (seccion === "deportes") {
-        if (role === "docente") {
-          renderSportReport();
-          renderTeacherEvidence();
-        }
-        else {
-          updateDailyMotivation();
-          renderEvidence(currentSport);
-          renderizarTablaRegistros();
-        }
+        updateDailyMotivation();
+        renderEvidence(currentSport);
+        renderizarTablaRegistros();
       }
       if (seccion === "objetivos") {
         const user = getActiveUser();
@@ -6220,7 +6171,6 @@
       }
       if (seccion === "logros") {
         renderizarMedallas();
-        if (role === "docente") renderMedalReport();
       }
       if (seccion === "observaciones") {
         renderizarObservacionesDocente();
@@ -6465,8 +6415,6 @@
       const button = event.target.closest("[data-reply-observation]");
       if (button) responderObservacionPrivada(button.dataset.replyObservation);
     });
-    document.getElementById("sportReportStudent").addEventListener("change", renderSportReport);
-    document.getElementById("sportReportSport").addEventListener("change", renderSportReport);
 
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem(STORAGE.session);
@@ -6815,6 +6763,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260906-4"></script>
+  <script type="module" src="/js/production.js?v=20260906-5"></script>
 </body>
 </html>
