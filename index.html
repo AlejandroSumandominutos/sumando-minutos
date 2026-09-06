@@ -3265,10 +3265,10 @@
       <button type="button" data-section="inicio" data-role-menu="all"><i data-lucide="home"></i>Inicio</button>
       <button type="button" data-section="deportes" data-role-menu="all"><i data-lucide="activity"></i>Deportes</button>
       <button type="button" data-section="blog" data-role-menu="all"><i data-lucide="camera"></i>Comunidad</button>
-      <button type="button" data-section="rankings" data-role-menu="estudiante"><i data-lucide="trophy"></i>Rankings</button>
+      <button type="button" data-section="rankings" data-role-menu="all"><i data-lucide="trophy"></i>Rankings</button>
       <button type="button" data-section="logros" data-role-menu="all"><i data-lucide="medal"></i>Medallas</button>
       <button type="button" data-section="objetivos" data-role-menu="estudiante"><i data-lucide="target"></i>Objetivos</button>
-      <button type="button" data-section="perfil" data-role-menu="estudiante"><i data-lucide="user"></i>Mi Perfil</button>
+      <button type="button" data-section="perfil" data-role-menu="all"><i data-lucide="user"></i>Mi Perfil</button>
       <button type="button" data-section="miniquiz" data-role-menu="estudiante"><i data-lucide="circle-help"></i>Mini Quiz</button>
       <button type="button" data-section="estadisticas" data-role-menu="docente"><i data-lucide="bar-chart-3"></i>Estadísticas</button>
       <button type="button" data-section="observaciones" data-role-menu="docente"><i data-lucide="message-square"></i>Observaciones</button>
@@ -6171,7 +6171,7 @@
 
       const role = obtenerRolUsuario();
       const studentSections = ["inicio", "deportes", "blog", "rankings", "logros", "objetivos", "perfil", "miniquiz"];
-      const teacherSections = ["inicio", "deportes", "blog", "logros", "estadisticas", "observaciones"];
+      const teacherSections = ["inicio", "deportes", "blog", "rankings", "logros", "perfil", "estadisticas", "observaciones"];
       const allowedSections = role === "docente" ? teacherSections : studentSections;
       if (!allowedSections.includes(seccion)) seccion = role === "docente" ? "estadisticas" : "inicio";
       sessionStorage.setItem(UI_STATE.section, seccion);
