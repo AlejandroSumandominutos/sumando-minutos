@@ -110,8 +110,17 @@
     ]
   };
 
-  const prefixes = ["Para comenzar:","Durante la práctica:","Reto de aprendizaje:","Con buena técnica:","Pensando en seguridad:","Para progresar:","En una sesión responsable:","Comprueba tus conocimientos:","Concepto deportivo:","Decisión inteligente:"];
-  const suffixes = ["Elige la opción correcta.","¿Cuál respuesta es adecuada?","Selecciona la mejor respuesta.","Identifica la opción válida.","¿Qué alternativa corresponde?","Marca la respuesta correcta.","¿Cuál opción aplicarías?","Escoge la afirmación correcta.","¿Qué deberías recordar?","Selecciona la respuesta más precisa."];
+  const culture = {
+    Gimnasio:[["Figura deportiva","¿Quién fue siete veces Mr. Olympia entre 1970 y 1980?","Arnold Schwarzenegger",["Usain Bolt","Michael Phelps","Rafael Nadal"]],["Material","¿Qué implemento permite ajustar discos a ambos extremos?","La barra",["El silbato","La red","La raqueta"]],["Competencia mundial","¿Qué organización internacional regula el levantamiento de pesas olímpico?","IWF",["FIFA","FIVB","World Aquatics"]],["Juegos Olímpicos","¿Qué dos movimientos forman el levantamiento de pesas olímpico?","Arranque y envión",["Press y remo","Carrera y salto","Saque y volea"]]],
+    Calistenia:[["Figura deportiva","¿Qué atleta popularizó rutinas de calistenia urbana bajo el nombre Hannibal For King?","Hannibal Lanham",["Roger Federer","Lionel Messi","Eliud Kipchoge"]],["Material","¿Qué equipo se utiliza habitualmente para hacer dominadas?","Barra fija",["Portería","Aletas","Raqueta"]],["Competencia mundial","¿Qué disciplina competitiva combina rutinas y habilidades libres en barras?","Freestyle",["Slalom","Biatlón","Waterpolo"]],["Juegos Olímpicos","¿La calistenia es actualmente una disciplina olímpica independiente?","No",["Sí, desde 1896","Sí, solo en invierno","Sí, desde 1968"]]],
+    Running:[["Figura deportiva","¿Quién posee dos oros olímpicos consecutivos en maratón, Río 2016 y Tokio 2020?","Eliud Kipchoge",["Pelé","Novak Djokovic","Michael Phelps"]],["Material","¿Qué accesorio mide el tiempo de una carrera?","Cronómetro",["Pala","Red","Gorro de natación"]],["Campeonato mundial","¿Qué organismo organiza el Campeonato Mundial de Atletismo?","World Athletics",["FIFA","FIP","ITF"]],["Juegos Olímpicos","¿Cuál es la distancia oficial del maratón olímpico?","42.195 km",["40 km","21.097 km","50 km"]]],
+    Hiking:[["Figura deportiva","¿Quién es conocido por completar las catorce montañas de más de 8,000 m sin oxígeno suplementario?","Reinhold Messner",["Carl Lewis","Diego Maradona","Serena Williams"]],["Material","¿Qué instrumento ayuda a orientarse si falla el teléfono?","Brújula",["Silbato arbitral","Bate","Raqueta"]],["Competencia mundial","¿El senderismo recreativo tiene una única Copa Mundial oficial?","No",["Sí, organizada por FIFA","Sí, cada cuatro años","Sí, solo bajo techo"]],["Juegos Olímpicos","¿El hiking es actualmente una disciplina olímpica?","No",["Sí, desde Atenas 1896","Sí, solo por equipos","Sí, en Juegos de Invierno"]]],
+    Tennis:[["Figura deportiva","¿Qué tenista ganó 23 títulos individuales de Grand Slam en la Era Abierta?","Serena Williams",["Simone Biles","Marta Vieira","Katie Ledecky"]],["Material","¿Qué parte de la raqueta entra en contacto principal con la pelota?","El encordado",["La red de cancha","El mango del árbitro","La línea de fondo"]],["Competencia mundial","¿Cuáles son los cuatro torneos de Grand Slam?","Australia, Roland Garros, Wimbledon y US Open",["Roma, Madrid, Miami y París","Davis, Billie Jean King, Laver y Hopman","Doha, Dubái, Pekín y Tokio"]],["Juegos Olímpicos","¿En qué superficie se disputó el tenis de París 2024?","Arcilla",["Césped","Moqueta","Madera"]]],
+    Padel:[["Figura deportiva","¿Qué pareja argentina fue número uno mundial durante trece temporadas consecutivas?","Fernando Belasteguín y Juan Martín Díaz",["Nadal y Federer","Messi y Di María","Bolt y Blake"]],["Material","¿Qué característica tiene una pala de pádel reglamentaria?","Es sólida y perforada",["Tiene cuerdas largas","Es de madera maciza sin agujeros","Tiene forma de bate"]],["Competencia mundial","¿Qué organismo organiza el Campeonato Mundial de Pádel?","Federación Internacional de Pádel",["FIFA","World Athletics","FIVB"]],["Juegos Olímpicos","¿El pádel es actualmente deporte olímpico?","No",["Sí, desde 2000","Sí, solo individual","Sí, en invierno"]]],
+    "Fútbol":[["Figura deportiva","¿Qué futbolista brasileña ha sido elegida seis veces mejor jugadora del mundo por FIFA?","Marta",["Nadia Comăneci","Steffi Graf","Paola Egonu"]],["Material","¿Qué elemento protege las espinillas?","Espinilleras",["Coderas de natación","Cinturón de pesas","Muñequeras de tenis"]],["Copa Mundial","¿Qué selección ganó la primera Copa Mundial masculina en 1930?","Uruguay",["Brasil","Alemania","Argentina"]],["Juegos Olímpicos","¿Cuántos equipos participan en un partido de fútbol?","Dos",["Tres","Cuatro","Cinco"]]],
+    Volleyball:[["Figura deportiva","¿Qué voleibolista brasileño es conocido como Giba?","Gilberto Amauri de Godoy Filho",["Ronaldo Nazário","Gustavo Kuerten","Ayrton Senna"]],["Material","¿Qué separa ambos campos?","La red",["Una pared de vidrio","Una portería","Una cuerda en el piso"]],["Campeonato mundial","¿Qué organismo organiza el Campeonato Mundial de Voleibol?","FIVB",["FIFA","ITF","World Athletics"]],["Juegos Olímpicos","¿En qué edición debutó el voleibol de sala en los Juegos Olímpicos?","Tokio 1964",["México 1968","Barcelona 1992","Atenas 1896"]]],
+    "Natación":[["Figura deportiva","¿Quién ganó ocho medallas de oro en natación en Pekín 2008?","Michael Phelps",["Mark Spitz en 2008","Usain Bolt","Roger Federer"]],["Material","¿Qué accesorio protege los ojos bajo el agua?","Goggles o gafas de natación",["Espinilleras","Guantes de portero","Pala"]],["Campeonato mundial","¿Qué organización dirige el Campeonato Mundial de Deportes Acuáticos?","World Aquatics",["FIFA","FIVB","ITF"]],["Juegos Olímpicos","¿Cuál de estos estilos forma parte del combinado individual?","Mariposa",["Perrito","Lateral recreativo","Buceo libre"]]]
+  };
 
   function rotateOptions(correct, distractors, seed) {
     const options = [correct, ...distractors];
@@ -122,18 +131,11 @@
 
   window.expandQuizLibrary = function expandQuizLibrary(library) {
     Object.entries(facts).forEach(([sport, sportFacts]) => {
-      const questions = [];
-      sportFacts.forEach((fact, factIndex) => {
-        for (let variant = 0; variant < 100; variant += 1) {
-          const answers = rotateOptions(fact[1], fact[2], factIndex * 101 + variant);
-          questions.push({
-            id: `quiz-${sport.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-")}-${factIndex + 1}-${variant + 1}`,
-            question: `${prefixes[variant % prefixes.length]} ${fact[0]} ${suffixes[Math.floor(variant / 10)]}`,
-            options: answers.options,
-            correct: answers.correct
-          });
-        }
-      });
+      const merged=[...sportFacts.map(x=>['Técnica y seguridad',...x]),...(culture[sport]||[])];
+      const questions = merged.map((fact,factIndex)=>{const category=fact[0],answers=rotateOptions(fact[2],fact[3],factIndex*17+3);return {
+        id:`quiz-${sport.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-")}-${factIndex+1}`,
+        category,question:`${category}: ${fact[1]}`,options:answers.options,correct:answers.correct
+      };});
       library[sport] = questions;
     });
     return library;

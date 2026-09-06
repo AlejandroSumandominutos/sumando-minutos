@@ -55,16 +55,18 @@ const templates={
   ]
 };
 const days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
-export function buildTrainingPlan({sport,level,purpose,weeklyMinutes}){
+const modifiers=['con pausa isométrica','con tempo controlado','en circuito técnico','con énfasis unilateral','con rango cómodo','con recuperación activa','por intervalos progresivos','con control de respiración'];
+const finishers=['movilidad específica','estabilidad del tronco','técnica a baja intensidad','vuelta a la calma guiada','coordinación y equilibrio','respiración y recuperación'];
+export function buildTrainingPlan({sport,level,purpose,weeklyMinutes,variation=0}){
   const source=templates[sport]||templates.Running;
   const sessions=level==='Principiante'?3:level==='Intermedio'?4:5;
   const minutes=Math.max(30,Number(weeklyMinutes)||150);
   const perSession=Math.max(20,Math.round(minutes/sessions/5)*5);
   const spacing=sessions===3?[0,2,5]:sessions===4?[0,2,4,6]:[0,1,3,4,6];
-  const rows=spacing.map((dayIndex,index)=>{const item=source[index%source.length];return {day:days[dayIndex],session:item[0],exercises:item[1],volume:item[2],distance:item[3],minutes:perSession,intensity:index===sessions-1?'Baja':index%3===1?'Alta':'Moderada'};});
+  const rows=spacing.map((dayIndex,index)=>{const item=source[(index+variation)%source.length],modifier=modifiers[(variation*3+index)%modifiers.length],finisher=finishers[(variation*5+index)%finishers.length];return {day:days[dayIndex],session:`${item[0]} · variante ${variation+1}`,exercises:`${item[1]}, ${modifier} y ${finisher}`,volume:`${item[2]} · bloque ${1+(variation%4)}`,distance:item[3],minutes:perSession,intensity:index===sessions-1?'Baja':(index+variation)%3===1?'Alta':'Moderada'};});
   const title=`Plan semanal de ${sport} · ${level}`;
   const summary=`${sessions} sesiones y ${minutes} minutos por semana, orientados a ${String(purpose).toLowerCase()}. La carga se distribuye para alternar trabajo, técnica y recuperación.`;
   const progression=level==='Principiante'?'Mantén la primera semana estable y aumenta como máximo 5–10 % cuando termines sin dolor ni fatiga excesiva.':level==='Intermedio'?'Aumenta 5–10 % cada dos semanas y realiza una semana más ligera cada cuatro semanas.':'Alterna semanas de carga y descarga; aumenta solo una variable a la vez: volumen, distancia o intensidad.';
   const recovery='Deja al menos un día ligero entre sesiones exigentes, hidrátate, duerme bien y detente ante dolor, mareo o dificultad inusual.';
-  return {title,summary,sport,level,purpose,weeklyMinutes:minutes,sessions,disclaimer:'Plan orientativo. Ajusta la carga a tu condición y detente ante dolor.',progression,recovery,rows};
+  return {title,summary,sport,level,purpose,weeklyMinutes:minutes,sessions,variation,disclaimer:'Plan orientativo. Ajusta la carga a tu condición y detente ante dolor.',progression,recovery,rows};
 }

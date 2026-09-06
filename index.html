@@ -3092,6 +3092,11 @@
     .profile-data-card img{width:120px;height:120px;object-fit:cover;border-radius:14px;margin-bottom:10px}
     .rating-control{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}
     #whatsappReminderPanel .field{max-width:420px;margin:12px 0}
+    #openRegisterBtn{display:inline-flex;justify-content:center;align-items:center;padding:14px 22px;border:2px solid #f4c934;border-radius:12px;background:#f4c934;color:#08275f;font-size:1.05rem;font-weight:900;box-shadow:0 8px 22px rgba(244,201,52,.3);text-decoration:none}
+    #openRegisterBtn:hover,#openRegisterBtn:focus-visible{background:#fff1a9;transform:translateY(-1px)}
+    .record-tools{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:10px 0 14px}.record-tools .field{margin:0;min-width:155px}.record-period{font-weight:700;color:#53627a}
+    .community-post .post-author{display:flex;align-items:center;gap:9px}.post-author-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #d4af37;background:#0a2a66;color:white;display:grid;place-items:center;font-weight:800;flex:none}.post-author-copy{display:flex;flex-direction:column;gap:1px}
+    .status-pill{display:inline-block;margin:8px 8px 8px 0;padding:7px 11px;border-radius:999px;background:#edf2fb;color:#17386f;font-weight:800}.status-pill.active{background:#dcf7e8;color:#087044}.status-pill.error{background:#ffe4e4;color:#9a2424}
     .training-plan-table{width:100%;min-width:760px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
     .training-plan-table th,.training-plan-table td{padding:11px;border:1px solid #d8e0ef;text-align:left;vertical-align:top}
     .training-plan-table th{background:#0a2a66;color:#fff}.training-plan-note{margin:10px 0;color:#53627a;font-size:.9rem}
@@ -3263,6 +3268,7 @@
       <button type="button" data-section="logros" data-role-menu="all"><i data-lucide="medal"></i>Medallas</button>
       <button type="button" data-section="objetivos" data-role-menu="estudiante"><i data-lucide="target"></i>Objetivos</button>
       <button type="button" data-section="perfil" data-role-menu="estudiante"><i data-lucide="user"></i>Mi Perfil</button>
+      <button type="button" data-section="miniquiz" data-role-menu="estudiante"><i data-lucide="circle-help"></i>Mini Quiz</button>
       <button type="button" data-section="estadisticas" data-role-menu="docente"><i data-lucide="bar-chart-3"></i>Estadísticas</button>
       <button type="button" data-section="observaciones" data-role-menu="docente"><i data-lucide="message-square"></i>Observaciones</button>
       <button type="button" id="logoutBtn"><i data-lucide="log-out"></i>Cerrar Sesión</button>
@@ -3372,6 +3378,17 @@
           <label class="field">Número con código de país<input id="whatsappPhone" type="tel" placeholder="+521234567890" autocomplete="tel"></label>
           <label><input id="whatsappEnabled" type="checkbox"> Acepto recibir este recordatorio automático</label>
           <button class="btn" id="saveWhatsappReminderBtn" type="button">Guardar preferencia</button>
+          <button class="btn secondary" id="testWhatsappReminderBtn" type="button">Enviar recordatorio de prueba</button>
+          <div><span class="status-pill" id="whatsappStatus">Configuración incompleta</span><span id="whatsappLastSent">Último envío: ninguno</span></div>
+        </div>
+      </article>
+      <article class="profile-avatar-panel student-only" id="securityQuestionPanel">
+        <div class="avatar-fallback" aria-hidden="true">🔐</div>
+        <div>
+          <h3>Pregunta de seguridad</h3><p>Configúrala o actualízala para poder recuperar tu contraseña sin depender del correo.</p>
+          <label class="field">Pregunta<select id="profileSecurityQuestion"><option>¿Cuál fue tu primer deporte favorito?</option><option>¿Cuál es el nombre de tu mascota?</option><option>¿Cuál es tu color favorito?</option><option>¿Cuál es tu ciudad de nacimiento?</option></select></label>
+          <label class="field">Respuesta<input id="profileSecurityAnswer" type="password" autocomplete="off"></label>
+          <button class="btn" id="saveSecurityQuestionBtn" type="button">Guardar pregunta segura</button>
         </div>
       </article>
 
@@ -3402,6 +3419,13 @@
 
       <h3 class="private-heading">Evidencias guardadas</h3>
       <div class="saved-readings" id="savedReadings"></div>
+
+      <article class="feature-panel student-only" id="coachLearningPanel">
+        <h3>Personalización de Rubén Coach</h3>
+        <p>Con tu permiso, adapta recomendaciones a tus deportes, objetivos, minutos y consultas. La información se usa únicamente dentro de tu cuenta.</p>
+        <label><input id="coachLearningEnabled" type="checkbox"> Permitir recomendaciones personalizadas y educativas</label>
+        <button class="btn secondary" id="clearCoachLearningBtn" type="button">Borrar preferencias aprendidas</button>
+      </article>
 
       <h3 class="private-heading">Progreso educativo</h3>
       <div class="education-summary">
@@ -3627,23 +3651,29 @@
             <div class="activity-history">
               <h4>Mis registros</h4>
               <p class="post-meta">Ordenados del más reciente al más antiguo.</p>
-              <button class="btn secondary" id="printActivityRecordsBtn" type="button" disabled>Imprimir / Guardar PDF</button>
+              <div class="record-tools">
+                <label class="field">Desde<input id="recordsDateFrom" type="date"></label>
+                <label class="field">Hasta<input id="recordsDateTo" type="date"></label>
+                <button class="btn secondary" id="clearRecordDatesBtn" type="button">Limpiar fechas</button>
+                <button class="btn secondary" id="printActivityRecordsBtn" type="button" disabled>Imprimir / Guardar PDF</button>
+              </div>
+              <p class="record-period" id="recordsPeriodLabel">Mostrando todos los registros.</p>
               <div class="records-scroll" id="activityRecords"></div>
             </div>
           </div>
-          <div class="quiz-card" id="quizCard">
-            <div class="quiz-heading">
-              <span class="quiz-icon" id="quizSportIcon" aria-hidden="true">🏃</span>
-              <div>
-                <h4>Mini Quiz · <span id="quizSport">Running</span></h4>
-                <p class="quiz-progress" id="quizProgress">Pregunta 1 de 2</p>
-              </div>
-            </div>
-            <p class="quiz-question" id="quizQuestion">¿Cuántos metros tiene una pista olímpica?</p>
-            <div class="quiz-options" id="quizAnswers"></div>
-          </div>
         </div>
       </article>
+    </div>
+  </section>
+
+  <section class="platform" id="miniquiz">
+    <div class="section-inner">
+      <div class="section-heading center"><p class="kicker">Aprendizaje deportivo</p><h2>Mini Quiz</h2><p class="lead">Preguntas únicas sobre figuras deportivas, consejos, material, campeonatos mundiales y Juegos Olímpicos.</p></div>
+      <label class="field" style="max-width:360px">Elige un deporte<select id="quizSportSelector"><option>Gimnasio</option><option>Calistenia</option><option>Running</option><option>Hiking</option><option>Tennis</option><option>Padel</option><option>Fútbol</option><option>Volleyball</option><option>Natación</option></select></label>
+      <div class="quiz-card" id="quizCard">
+        <div class="quiz-heading"><span class="quiz-icon" id="quizSportIcon" aria-hidden="true">🏃</span><div><h4>Mini Quiz · <span id="quizSport">Running</span></h4><p class="quiz-progress" id="quizProgress">Pregunta 1</p></div></div>
+        <p class="quiz-question" id="quizQuestion">Cargando pregunta…</p><div class="quiz-options" id="quizAnswers"></div>
+      </div>
     </div>
   </section>
 
@@ -3652,7 +3682,7 @@
       <div class="section-heading">
         <p class="kicker">Comunidad deportiva</p>
         <h2>Comparte el entrenamiento que sumaste hoy</h2>
-        <p class="lead">Un espacio positivo para publicar avances, comentar y reconocer la constancia.</p>
+        <p class="lead">Un espacio positivo para publicar avances, comentar y reconocer la constancia. Las publicaciones públicas permanecen visibles durante 24 horas.</p>
       </div>
 
       <div class="community-composer">
@@ -4479,6 +4509,7 @@
         step.classList.toggle("active", step.id === stepId);
       });
     }
+    window.updateRecoveryStep = updateRecoveryStep;
 
     function closeRecoveryModal() {
       document.getElementById("recoveryModal").classList.remove("open");
@@ -4775,14 +4806,16 @@
     }
 
     function getQuizStartIndex(sport) {
-      const saved = Number(sessionStorage.getItem(`sumandoMinutosQuizCursor:${sport}`) || 0);
+      const userKey=getActiveUser()?.username||"visitante";
+      const saved = Number(localStorage.getItem(`sumandoMinutosQuizCursor:${userKey}:${sport}`) || 0);
       const total = quizLibrary[sport]?.length || 1;
-      return Math.max(0, saved % total);
+      return Math.max(0, Math.min(saved, total));
     }
 
     function renderQuiz(sport, index = 0) {
       const questions = quizLibrary[sport] || [];
       if (!questions.length) return;
+      if(index>=questions.length){document.getElementById("quizSport").textContent=sport;document.getElementById("quizProgress").textContent=`${questions.length} preguntas únicas completadas`;document.getElementById("quizQuestion").textContent="Completaste todas las preguntas disponibles de este deporte. El banco se ampliará con nuevas preguntas verificadas.";document.getElementById("quizAnswers").innerHTML="";return;}
       const sportIcons = {
         "Gimnasio": "🏋️",
         "Calistenia": "🤸",
@@ -4795,7 +4828,7 @@
         "Natación": "🏊"
       };
       currentQuizIndex = Math.max(0, Math.min(index, questions.length - 1));
-      sessionStorage.setItem(`sumandoMinutosQuizCursor:${sport}`, String(currentQuizIndex));
+      localStorage.setItem(`sumandoMinutosQuizCursor:${getActiveUser()?.username||"visitante"}:${sport}`, String(currentQuizIndex));
       const quiz = questions[currentQuizIndex];
       document.getElementById("quizSportIcon").textContent = sportIcons[sport] || "🏅";
       document.getElementById("quizSport").textContent = sport;
@@ -4805,6 +4838,14 @@
         <button class="quiz-option" type="button" data-quiz-answer="${optionIndex}">${escapeHtml(option)}</button>
       `).join("");
     }
+    window.renderQuiz = renderQuiz;
+    window.getQuizStartIndex = getQuizStartIndex;
+    window.selectQuizSport = sport => {
+      currentSport = sport;
+      const selector = document.getElementById("quizSportSelector");
+      if (selector) selector.value = sport;
+      renderQuiz(sport, getQuizStartIndex(sport));
+    };
 
     function launchConfetti() {
       const colors = ["#d4af37", "#0a2a66", "#ffffff", "#2f8f6f", "#1d4ed8"];
@@ -4980,7 +5021,8 @@
       const messages = document.getElementById("coachMessages");
       const bubble = document.createElement("div");
       bubble.className = `chat-message ${role}`;
-      bubble.textContent = text;
+      const parts=String(text).split(/(https?:\/\/[^\s]+)/g);
+      parts.forEach(part=>{if(/^https?:\/\//.test(part)){const link=document.createElement("a");link.href=part;link.target="_blank";link.rel="noopener noreferrer";link.textContent=part;bubble.appendChild(link);}else bubble.appendChild(document.createTextNode(part));});
       messages.appendChild(bubble);
       messages.scrollTop = messages.scrollHeight;
       if (save) {
@@ -6083,12 +6125,13 @@
         logros: ["logros"],
         objetivos: ["objetivos"],
         perfil: ["plataforma"],
+        miniquiz: ["miniquiz"],
         estadisticas: ["rankings"],
         observaciones: ["observacionesDocente"]
       };
 
       const role = obtenerRolUsuario();
-      const studentSections = ["inicio", "deportes", "blog", "rankings", "logros", "objetivos", "perfil"];
+      const studentSections = ["inicio", "deportes", "blog", "rankings", "logros", "objetivos", "perfil", "miniquiz"];
       const teacherSections = ["inicio", "deportes", "blog", "logros", "estadisticas", "observaciones"];
       const allowedSections = role === "docente" ? teacherSections : studentSections;
       if (!allowedSections.includes(seccion)) seccion = role === "docente" ? "estadisticas" : "inicio";
@@ -6119,6 +6162,11 @@
         if (user) document.getElementById("goalSport").value = user.sport || currentSport;
         renderGoalRecommendation();
         renderCurrentGoal();
+      }
+      if (seccion === "miniquiz") {
+        const selected = document.getElementById("quizSportSelector")?.value || currentSport;
+        currentSport = selected;
+        renderQuiz(selected, getQuizStartIndex(selected));
       }
       if (seccion === "rankings") {
         renderizarRankings();
@@ -6475,7 +6523,9 @@
         return;
       }
       const questions = quizLibrary[currentSport] || [];
-      renderQuiz(currentSport, (currentQuizIndex + 1) % questions.length);
+      const next=currentQuizIndex+1;
+      localStorage.setItem(`sumandoMinutosQuizCursor:${getActiveUser()?.username||"visitante"}:${currentSport}`,String(next));
+      renderQuiz(currentSport,next);
     });
 
     document.getElementById("uploadPhotoBtn").addEventListener("click", () => {
@@ -6722,6 +6772,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260831-6"></script>
+  <script type="module" src="/js/production.js?v=20260905-1"></script>
 </body>
 </html>

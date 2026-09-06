@@ -22,6 +22,16 @@
   status = 200
 
 [[redirects]]
+  from = "/api/security-recovery"
+  to = "/.netlify/functions/security-recovery"
+  status = 200
+
+[[redirects]]
+  from = "/api/whatsapp-test"
+  to = "/.netlify/functions/whatsapp-reminders"
+  status = 200
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

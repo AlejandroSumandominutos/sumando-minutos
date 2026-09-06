@@ -1,12 +1,14 @@
 import { getSupabase, assertOk } from './supabase.js';
 import { uploadUserImage } from './images.js';
 
-function avatarStore(mode,userId,file){
+function pendingStore(storeName,mode,userId,value){
   if(!('indexedDB' in window))return Promise.resolve(null);
-  return new Promise((resolve,reject)=>{const request=indexedDB.open('sumando-minutos-pending',1);request.onupgradeneeded=()=>request.result.createObjectStore('avatars');request.onerror=()=>reject(request.error);request.onsuccess=()=>{const db=request.result,tx=db.transaction('avatars',mode==='get'?'readonly':'readwrite'),store=tx.objectStore('avatars'),op=mode==='put'?store.put(file,userId):mode==='delete'?store.delete(userId):store.get(userId);op.onsuccess=()=>resolve(op.result);op.onerror=()=>reject(op.error);tx.oncomplete=()=>db.close();};});
+  return new Promise((resolve,reject)=>{const request=indexedDB.open('sumando-minutos-pending',2);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('avatars'))request.result.createObjectStore('avatars');if(!request.result.objectStoreNames.contains('security'))request.result.createObjectStore('security');};request.onerror=()=>reject(request.error);request.onsuccess=()=>{const db=request.result,tx=db.transaction(storeName,mode==='get'?'readonly':'readwrite'),store=tx.objectStore(storeName),op=mode==='put'?store.put(value,userId):mode==='delete'?store.delete(userId):store.get(userId);op.onsuccess=()=>resolve(op.result);op.onerror=()=>reject(op.error);tx.oncomplete=()=>db.close();};});
 }
+const avatarStore=(mode,userId,file)=>pendingStore('avatars',mode,userId,file);
+const securityStore=(mode,userId,value)=>pendingStore('security',mode,userId,value);
 
-export async function signUp({ email, password, username, fullName, age, sport, institution, avatar }) {
+export async function signUp({ email, password, username, fullName, age, sport, institution, avatar, securityQuestion, securityAnswer }) {
   const supabase = await getSupabase();
   const auth = assertOk(await supabase.auth.signUp({ email, password, options: {
     emailRedirectTo: `${location.origin}/`,
@@ -18,6 +20,10 @@ export async function signUp({ email, password, username, fullName, age, sport, 
     assertOk(await supabase.from('profiles').update({ avatar_url: data.publicUrl }).eq('id', auth.user.id));
   } else if (auth.user && avatar) {
     await avatarStore('put',auth.user.id,avatar);
+  }
+  if(auth.user&&securityQuestion&&securityAnswer){
+    if(auth.session) assertOk(await supabase.rpc('set_my_security_question',{p_question:securityQuestion,p_answer:securityAnswer}));
+    else await securityStore('put',auth.user.id,{question:securityQuestion,answer:securityAnswer});
   }
   return auth;
 }
@@ -44,5 +50,7 @@ export async function currentContext() {
     profile=assertOk(await supabase.from('profiles').update({avatar_url:data.publicUrl}).eq('id',session.user.id).select().single());
     await avatarStore('delete',session.user.id).catch(()=>null);
   }
+  const pendingSecurity=await securityStore('get',session.user.id).catch(()=>null);
+  if(pendingSecurity){assertOk(await supabase.rpc('set_my_security_question',{p_question:pendingSecurity.question,p_answer:pendingSecurity.answer}));await securityStore('delete',session.user.id).catch(()=>null);}
   return { session, profile };
 }
