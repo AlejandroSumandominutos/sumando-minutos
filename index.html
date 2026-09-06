@@ -3490,6 +3490,7 @@
 
       <div class="teacher-report teacher-only">
         <h3>Estadísticas del grupo</h3>
+        <button class="btn secondary" id="printTeacherStatsBtn" type="button">Imprimir / Guardar PDF</button>
         <div class="education-summary">
           <div class="education-stat"><strong id="teacherTotalMinutes">0</strong><span>Minutos semanales</span></div>
           <div class="education-stat"><strong id="teacherTotalCalories">0</strong><span>Calorías acumuladas</span></div>
@@ -3734,8 +3735,10 @@
         <p class="lead">Los líderes provisionales se actualizan con cada actividad. El viernes a las 3:00 p. m. se cierran los ganadores y el nuevo conteo comienza el lunes a la 1:00 a. m.</p>
       </div>
       <div class="medal-showcase" id="weeklyMedals"></div>
+      <button class="btn secondary" id="printMedalBoardBtn" type="button">Imprimir medallero / Guardar PDF</button>
       <div class="teacher-report teacher-only">
         <h3>📄 Reporte de medallas</h3>
+        <button class="btn secondary" id="printMedalReportBtn" type="button">Imprimir reporte / Guardar PDF</button>
         <div id="medalReportContent"></div>
       </div>
     </div>
@@ -3758,10 +3761,11 @@
         <div id="teacherSentObservations"></div>
         <div class="teacher-evidence-panel">
           <h3>🔑 Recuperación de acceso para estudiantes</h3>
-          <p class="lead">Genera un código temporal que el estudiante podrá usar una sola vez como contraseña.</p>
+          <p class="lead">Busca al estudiante por usuario y genera una contraseña nueva. La contraseña anterior dejará de funcionar.</p>
           <div class="teacher-access-grid">
-            <label class="field">Estudiante<select id="temporaryAccessStudent"></select></label>
-            <button class="btn" id="generateTemporaryAccessBtn" type="button">Generar código</button>
+            <label class="field">Buscar por usuario<input id="temporaryAccessStudentSearch" type="search" placeholder="Nombre de usuario" autocomplete="off"></label>
+            <label class="field">Estudiante<select id="temporaryAccessStudent"><option value="">Escribe un usuario para buscar</option></select></label>
+            <button class="btn" id="generateTemporaryAccessBtn" type="button">Generar nueva contraseña</button>
           </div>
           <div class="recovery-code" id="teacherTemporaryCode" hidden></div>
         </div>
@@ -6811,6 +6815,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260905-3"></script>
+  <script type="module" src="/js/production.js?v=20260906-1"></script>
 </body>
 </html>

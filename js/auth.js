@@ -30,9 +30,10 @@ export async function signUp({ email, password, username, fullName, age, sport, 
 
 export async function signIn(identifier, password) {
   const supabase = await getSupabase();
-  const email = identifier.trim();
-  if (!email.includes('@')) throw new Error('Inicia sesión con tu correo electrónico.');
-  return assertOk(await supabase.auth.signInWithPassword({ email, password }));
+  const response=await fetch('/api/login',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({identifier:identifier.trim(),password})}),raw=await response.text();
+  let data={};try{data=raw?JSON.parse(raw):{};}catch{}
+  if(!response.ok)throw new Error(data.error||'No fue posible iniciar sesión.');
+  return assertOk(await supabase.auth.setSession({access_token:data.access_token,refresh_token:data.refresh_token}));
 }
 export async function signOut() { return assertOk(await (await getSupabase()).auth.signOut()); }
 export async function sendPasswordReset(email) {
