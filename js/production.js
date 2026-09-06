@@ -74,13 +74,13 @@ async function verifySecureRecovery(event){event.preventDefault();event.stopImme
 async function resetSecurePassword(event){event.preventDefault();event.stopImmediatePropagation();const password=$('recoveryNewPassword').value,confirmPassword=$('recoveryConfirmPassword').value;try{if(password.length<8||!/[A-Za-z]/.test(password)||!/[0-9]/.test(password))throw new Error('Usa al menos 8 caracteres, una letra y un número.');if(password!==confirmPassword)throw new Error('Las contraseñas no coinciden.');const response=await fetch('/api/security-recovery',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({action:'reset',token:secureRecoveryToken,password})}),data=await response.json();if(!response.ok)throw new Error(data.error||'No se pudo actualizar la contraseña.');secureRecoveryToken='';$('recoveryModal').classList.remove('open');toast('✅ Contraseña actualizada. Ya puedes iniciar sesión.','success');}catch(error){toast(`❌ ${error.message}`,'error');}}
 function activityPayload(){
   const details=window.readDynamicSportFields?.()||{};
-  const a={sport:productionSport,activity_date:$('activityDate').value,minutes:Number($('activityMinutes').value),intensity:$('activityIntensity').value,notes:$('activityNotes').value.trim(),visibility:$('activityVisibility').value};
+  const a={sport:productionSport,activity_date:$('activityDate').value,minutes:Number($('activityMinutes').value),intensity:$('activityIntensity').value,notes:$('activityNotes').value.trim(),visibility:'public'};
   const aliases={distance:'distance',distanceMeters:'distance',bodyPart:'body_part',muscleGroup:'body_part',workoutType:'workout_type',exercise:'exercise',sets:'sets',repetitions:'repetitions',weightUsed:'weight',pace:'pace',elevation:'elevation',position:'position',style:'swimming_style',sessionType:'session_type',level:'level',difficulty:'difficulty'};
   Object.entries(details).forEach(([k,v])=>{if(aliases[k]&&v!=='')a[aliases[k]]=v;}); a.calories=calculateCalories(a,context.profile?.weight_kg); return a;
 }
 async function onActivity(event){
   event.preventDefault();event.stopImmediatePropagation();const button=$('saveActivityBtn');busy(button,true,'Guardando…');
-  try{const payload=activityPayload();if(!payload.activity_date||!payload.minutes||payload.minutes<1||!payload.intensity)throw new Error('Completa fecha, tiempo e intensidad.');const s=await getSupabase();const {data:settings}=await s.from('app_settings').select('evidence_required').single();await createActivity(payload,$('activityEvidence').files[0],settings?.evidence_required);toast('✅ Actividad registrada','success');resetActivityForm();await Promise.all([renderHistory(),renderRankings(),renderSportCalories(),renderProgress(),renderProfile()]);}
+  try{const payload=activityPayload();if(!payload.activity_date||!payload.minutes||payload.minutes<1||!payload.intensity)throw new Error('Completa fecha, tiempo e intensidad.');const evidenceFile=$('activityEvidence').files[0],s=await getSupabase();const {data:settings}=await s.from('app_settings').select('evidence_required').single();await createActivity(payload,evidenceFile,settings?.evidence_required);if(evidenceFile){const description=(`Entrenamiento de ${payload.sport}: ${payload.minutes} minutos. ${payload.notes||'Evidencia de entrenamiento registrada.'}`).slice(0,500);await createPost({description,sport:payload.sport,visibility:'public',image:evidenceFile});}toast(evidenceFile?'✅ Actividad registrada y publicada en Comunidad':'✅ Actividad registrada','success');resetActivityForm();await Promise.all([renderHistory(),renderRankings(),renderSportCalories(),renderProgress(),renderProfile(),renderPosts()]);}
   catch(error){toast(`❌ ${error.message}`,'error');}finally{busy(button,false);}
 }
 
@@ -90,7 +90,6 @@ function resetActivityForm(){
   document.querySelectorAll('#dynamicSportFields input,#dynamicSportFields textarea').forEach(el=>el.value='');
   document.querySelectorAll('#dynamicSportFields select').forEach(el=>el.selectedIndex=-1);
   if($('activityEvidence'))$('activityEvidence').value='';
-  if($('activityVisibility'))$('activityVisibility').value='private';
   const preview=$('activityEvidencePreview');if(preview){preview.removeAttribute('src');preview.classList.remove('visible');}
   if($('evidencePreviewDetails'))$('evidencePreviewDetails').textContent='';
   if($('trainingCalories'))$('trainingCalories').textContent='0 kcal';

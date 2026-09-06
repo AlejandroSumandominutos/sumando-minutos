@@ -3602,9 +3602,6 @@
                   <label class="field">Subir fotografía
                     <input id="activityEvidence" type="file" accept="image/*" capture="environment">
                   </label>
-                  <label class="field">Visibilidad
-                    <select id="activityVisibility"><option value="private">🔒 Privada</option><option value="public">🌎 Pública</option></select>
-                  </label>
                   <img class="evidence-preview" id="activityEvidencePreview" alt="Vista previa de la evidencia">
                   <p class="post-meta" id="evidencePreviewDetails"></p>
                 </div>
@@ -5863,7 +5860,7 @@
         xp: minutes + (activityEvidenceData ? 5 : 0),
         calories: calcularCaloriasEntrenamiento(),
         evidence: activityEvidenceData,
-        visibility: document.getElementById("activityVisibility").value,
+        visibility: "public",
         sportDetails: readDynamicSportFields(),
         createdAt: new Date().toISOString()
       };
@@ -6763,6 +6760,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260906-6"></script>
+  <script type="module" src="/js/production.js?v=20260906-8"></script>
 </body>
 </html>
