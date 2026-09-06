@@ -131,7 +131,8 @@
 
   window.expandQuizLibrary = function expandQuizLibrary(library) {
     Object.entries(facts).forEach(([sport, sportFacts]) => {
-      const merged=[...sportFacts.map(x=>['Técnica y seguridad',...x]),...(culture[sport]||[])];
+      const baseCategories=['Técnica','Consejo deportivo','Material','Reglamento','Seguridad'];
+      const merged=[...sportFacts.map((x,index)=>[baseCategories[index%baseCategories.length],...x]),...(culture[sport]||[])];
       const questions = merged.map((fact,factIndex)=>{const category=fact[0],answers=rotateOptions(fact[2],fact[3],factIndex*17+3);return {
         id:`quiz-${sport.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-")}-${factIndex+1}`,
         category,question:`${category}: ${fact[1]}`,options:answers.options,correct:answers.correct

@@ -8,11 +8,11 @@ function pendingStore(storeName,mode,userId,value){
 const avatarStore=(mode,userId,file)=>pendingStore('avatars',mode,userId,file);
 const securityStore=(mode,userId,value)=>pendingStore('security',mode,userId,value);
 
-export async function signUp({ email, password, username, fullName, age, sport, institution, avatar, securityQuestion, securityAnswer }) {
+export async function signUp({ email, password, username, fullName, age, sport, institution, subject, role='student', avatar, securityQuestion, securityAnswer }) {
   const supabase = await getSupabase();
   const auth = assertOk(await supabase.auth.signUp({ email, password, options: {
     emailRedirectTo: `${location.origin}/`,
-    data: { username, full_name: fullName, age: age || '', favorite_sport: sport || '', institution: institution || '' }
+    data: { username, full_name: fullName, age: age || '', favorite_sport: sport || '', institution: institution || '', subject: subject || '', role: role === 'teacher' ? 'teacher' : 'student' }
   }}));
   if (auth.user && auth.session && avatar) {
     const path = await uploadUserImage(supabase, 'avatars', auth.user.id, avatar);

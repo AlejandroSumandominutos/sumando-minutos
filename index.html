@@ -3097,6 +3097,7 @@
     .record-tools{display:flex;align-items:end;gap:10px;flex-wrap:wrap;margin:10px 0 14px}.record-tools .field{margin:0;min-width:155px}.record-period{font-weight:700;color:#53627a}
     .community-post .post-author{display:flex;align-items:center;gap:9px}.post-author-avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid #d4af37;background:#0a2a66;color:white;display:grid;place-items:center;font-weight:800;flex:none}.post-author-copy{display:flex;flex-direction:column;gap:1px}
     .status-pill{display:inline-block;margin:8px 8px 8px 0;padding:7px 11px;border-radius:999px;background:#edf2fb;color:#17386f;font-weight:800}.status-pill.active{background:#dcf7e8;color:#087044}.status-pill.error{background:#ffe4e4;color:#9a2424}
+    #miniquiz .field{color:#08285f;font-weight:800}#miniquiz .field select{color:#08285f;background:#fff;border:1px solid #b9c7dc}
     .training-plan-table{width:100%;min-width:760px;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden}
     .training-plan-table th,.training-plan-table td{padding:11px;border:1px solid #d8e0ef;text-align:left;vertical-align:top}
     .training-plan-table th{background:#0a2a66;color:#fff}.training-plan-note{margin:10px 0;color:#53627a;font-size:.9rem}
@@ -4812,8 +4813,46 @@
       return Math.max(0, Math.min(saved, total));
     }
 
-    function renderQuiz(sport, index = 0) {
+    function getOrderedQuizQuestions(sport) {
       const questions = quizLibrary[sport] || [];
+      const userKey = getActiveUser()?.username || "visitante";
+      const orderKey = `sumandoMinutosQuizOrder:v2:${userKey}:${sport}`;
+      let savedOrder = [];
+      try { savedOrder = JSON.parse(localStorage.getItem(orderKey) || "[]"); } catch { savedOrder = []; }
+      const byId = new Map(questions.map(question => [question.id, question]));
+      if (savedOrder.length === questions.length && savedOrder.every(id => byId.has(id))) {
+        return savedOrder.map(id => byId.get(id));
+      }
+      const groups = new Map();
+      questions.forEach(question => {
+        const category = question.category || "General";
+        if (!groups.has(category)) groups.set(category, []);
+        groups.get(category).push(question);
+      });
+      groups.forEach(items => {
+        for (let i = items.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [items[i], items[j]] = [items[j], items[i]];
+        }
+      });
+      const ordered = [];
+      let previousCategory = "";
+      while (ordered.length < questions.length) {
+        const available = [...groups.entries()].filter(([,items]) => items.length && groups.size);
+        const allowed = available.filter(([category]) => category !== previousCategory);
+        const candidates = allowed.length ? allowed : available;
+        const maxRemaining = Math.max(...candidates.map(([,items]) => items.length));
+        const strongest = candidates.filter(([,items]) => items.length === maxRemaining);
+        const [category,items] = strongest[Math.floor(Math.random() * strongest.length)];
+        ordered.push(items.pop());
+        previousCategory = category;
+      }
+      localStorage.setItem(orderKey, JSON.stringify(ordered.map(question => question.id)));
+      return ordered;
+    }
+
+    function renderQuiz(sport, index = 0) {
+      const questions = getOrderedQuizQuestions(sport);
       if (!questions.length) return;
       if(index>=questions.length){document.getElementById("quizSport").textContent=sport;document.getElementById("quizProgress").textContent=`${questions.length} preguntas únicas completadas`;document.getElementById("quizQuestion").textContent="Completaste todas las preguntas disponibles de este deporte. El banco se ampliará con nuevas preguntas verificadas.";document.getElementById("quizAnswers").innerHTML="";return;}
       const sportIcons = {
@@ -6482,7 +6521,7 @@
     document.getElementById("quizAnswers").addEventListener("click", event => {
       const button = event.target.closest("[data-quiz-answer]");
       if (!button) return;
-      const questions = quizLibrary[currentSport] || [];
+      const questions = getOrderedQuizQuestions(currentSport);
       const quiz = questions[currentQuizIndex];
       const selected = Number(button.dataset.quizAnswer);
       document.querySelectorAll(".quiz-option").forEach(option => {
@@ -6522,7 +6561,7 @@
         renderQuiz(currentSport, currentQuizIndex);
         return;
       }
-      const questions = quizLibrary[currentSport] || [];
+      const questions = getOrderedQuizQuestions(currentSport);
       const next=currentQuizIndex+1;
       localStorage.setItem(`sumandoMinutosQuizCursor:${getActiveUser()?.username||"visitante"}:${currentSport}`,String(next));
       renderQuiz(currentSport,next);
@@ -6772,6 +6811,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260905-1"></script>
+  <script type="module" src="/js/production.js?v=20260905-3"></script>
 </body>
 </html>
