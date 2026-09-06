@@ -1,6 +1,6 @@
 import { getSupabase } from './supabase.js';
 import { signUp, signIn, signOut, sendPasswordReset, updatePassword, currentContext } from './auth.js?v=20260906-3';
-import { calculateCalories, createActivity, listMyActivities } from './activities.js';
+import { calculateCalories, createActivity, listMyActivities } from './activities.js?v=20260906-1';
 import { teacherStudents } from './data.js';
 import { saveGoal, saveQuiz, saveArticle } from './data.js';
 import { createPost, listPosts, comment, rate } from './community.js';
@@ -117,7 +117,7 @@ function filteredActivityRows(){const from=$('recordsDateFrom')?.value,to=$('rec
 function renderActivityRows(){const box=$('activityRecords');if(!box)return;const rows=filteredActivityRows(),from=$('recordsDateFrom')?.value,to=$('recordsDateTo')?.value;if($('recordsPeriodLabel'))$('recordsPeriodLabel').textContent=from||to?`Periodo mostrado: ${from||'inicio'} a ${to||'hoy'} · ${rows.length} registro(s).`:`Mostrando todos los registros · ${rows.length} registro(s).`;if($('printActivityRecordsBtn'))$('printActivityRecordsBtn').disabled=!rows.length;box.innerHTML=rows.length?`<div class="records-scroll"><table class="records-table"><thead><tr><th>Fecha</th><th>Deporte</th><th>Minutos</th><th>Intensidad</th><th>Distancia</th><th>Calorías</th></tr></thead><tbody>${rows.map(a=>`<tr><td>${a.activity_date}</td><td>${a.sport}</td><td>${a.minutes} min</td><td>${a.intensity}</td><td>${a.distance??'—'}</td><td>${a.calories} kcal</td></tr>`).join('')}</tbody></table></div>`:'<div class="records-empty">Sin registros en el periodo seleccionado</div>';}
 async function renderHistory(){
   const box=$('activityRecords');if(!box||!context.session)return;box.setAttribute('aria-busy','true');
-  try{const {data}=await listMyActivities();activityRows=data||[];renderActivityRows();}catch(e){toast(`❌ ${e.message}`,'error');}finally{box.removeAttribute('aria-busy');}
+  try{const {data}=await listMyActivities({pageSize:1000});activityRows=data||[];renderActivityRows();}catch(e){toast(`❌ ${e.message}`,'error');}finally{box.removeAttribute('aria-busy');}
 }
 async function renderRankings(){
   if(!context.session)return;try{const s=await getSupabase(),call=async sport=>{const {data,error}=await s.rpc('live_weekly_rankings',{p_sport:sport});if(error)throw error;return (data||[]).map(r=>({...r,position:r.rank_position}));},general=await call(null),bySport=Object.fromEntries(await Promise.all(rankingSports.map(async sport=>[sport,await call(sport)]))),{data:medalData,error:medalError}=await s.rpc('medal_weekly_rankings');if(medalError)throw medalError;const avatar=r=>r?.avatar_url?`<img class="rank-avatar" src="${escape(r.avatar_url)}" alt="Foto de ${escape(r.full_name)}">`:`<div class="rank-avatar avatar-fallback">${escape(r?.full_name?.[0]||'–')}</div>`,empty=i=>({position:i,full_name:'Sin registro',total_minutes:0,dominant_sport:'Sin registro'}),top=[general[0]||empty(1),general[1]||empty(2),general[2]||empty(3)],medalTop=[0,1,2].map(i=>medalData?.[i]?({...medalData[i],position:medalData[i].rank_position}):empty(i+1));

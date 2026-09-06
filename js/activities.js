@@ -18,7 +18,9 @@ export async function createActivity(activity, evidenceFile, evidenceRequired = 
 }
 export async function listMyActivities({ sport, from, to, page = 0, pageSize = 25 } = {}) {
   const supabase = await getSupabase();
-  let query = supabase.from('activities').select('*',{count:'exact'}).order('activity_date',{ascending:false}).order('created_at',{ascending:false}).range(page*pageSize,(page+1)*pageSize-1);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Inicia sesión nuevamente.');
+  let query = supabase.from('activities').select('*',{count:'exact'}).eq('user_id',user.id).order('activity_date',{ascending:false}).order('created_at',{ascending:false}).range(page*pageSize,(page+1)*pageSize-1);
   if (sport) query=query.eq('sport',sport); if(from) query=query.gte('activity_date',from); if(to) query=query.lte('activity_date',to);
   const {data,error,count}=await query; if(error) throw error; return {data,count};
 }
