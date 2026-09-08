@@ -192,6 +192,7 @@ async function boot(){
 }
 
 $('loginForm')?.addEventListener('submit',onLogin,true);
+window.__SUMANDO_LOGIN_READY__=true;
 $('registerForm')?.addEventListener('submit',onRegister,true);
 $('saveActivityBtn')?.addEventListener('click',onActivity,true);
 $('postForm')?.addEventListener('submit',onPost,true);

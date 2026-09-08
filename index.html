@@ -6292,7 +6292,28 @@
       return false;
     }
 
-    // El inicio de sesión se gestiona exclusivamente en production.js contra Supabase.
+    // El inicio de sesión se gestiona exclusivamente contra Supabase. Si el módulo
+    // todavía no terminó de cargar, este puente lo carga y reintenta una sola vez.
+    document.getElementById("loginForm").addEventListener("submit", async event => {
+      if (window.__SUMANDO_LOGIN_READY__) return;
+      event.preventDefault();
+      const submitButton = event.currentTarget.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Conectando…";
+      }
+      try {
+        await import("/js/production.js?v=20260908-3");
+        if (!window.__SUMANDO_LOGIN_READY__) throw new Error("el módulo de acceso no inició");
+        event.currentTarget.requestSubmit();
+      } catch (error) {
+        notify(`No fue posible cargar el inicio de sesión: ${error.message}. Vuelve a subir la carpeta js completa.`);
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = "Iniciar Sesión";
+        }
+      }
+    });
 
     function cerrarModalRegistro() {
       document.getElementById("registerModal").classList.remove("open");
@@ -6815,6 +6836,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260908-2"></script>
+  <script type="module" src="/js/production.js?v=20260908-3"></script>
 </body>
 </html>
