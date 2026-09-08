@@ -3612,9 +3612,10 @@
                 <div class="evidence-upload">
                   <h4>📸 Evidencia del entrenamiento</h4>
                   <p class="post-meta" id="evidenceRequirementText">La fotografía es obligatoria y se publicará automáticamente en Comunidad.</p>
-                  <label class="field">Subir fotografía
-                    <input id="activityEvidence" type="file" accept="image/*" capture="environment">
+                  <label class="field">Tomar o elegir fotografía
+                    <input id="activityEvidence" type="file" accept="image/*" aria-describedby="evidenceSourceHelp">
                   </label>
+                  <p class="post-meta" id="evidenceSourceHelp">Puedes usar la cámara o elegir una imagen de la galería de tu dispositivo.</p>
                   <img class="evidence-preview" id="activityEvidencePreview" alt="Vista previa de la evidencia">
                   <p class="post-meta" id="evidencePreviewDetails"></p>
                 </div>
@@ -6322,7 +6323,7 @@
         submitButton.textContent = "Conectando…";
       }
       try {
-        await import("/js/production.js?v=20260908-4");
+        await import("/js/production.js?v=20260908-6");
         if (!window.__SUMANDO_LOGIN_READY__) throw new Error("el módulo de acceso no inició");
         event.currentTarget.requestSubmit();
       } catch (error) {
@@ -6855,6 +6856,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260908-5"></script>
+  <script type="module" src="/js/production.js?v=20260908-6"></script>
 </body>
 </html>
