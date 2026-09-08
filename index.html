@@ -6292,7 +6292,7 @@
       return false;
     }
 
-    document.getElementById("loginForm").addEventListener("submit", handleLogin);
+    // El inicio de sesión se gestiona exclusivamente en production.js contra Supabase.
 
     function cerrarModalRegistro() {
       document.getElementById("registerModal").classList.remove("open");
@@ -6815,6 +6815,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260908-1"></script>
+  <script type="module" src="/js/production.js?v=20260908-2"></script>
 </body>
 </html>
