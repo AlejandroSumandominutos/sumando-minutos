@@ -1151,6 +1151,7 @@
       color: rgba(255,255,255,.86);
       font-weight: 700;
     }
+    [hidden]{display:none!important}
 
     .field input,
     .field select,
@@ -5407,6 +5408,24 @@
           { key: "sessionType", label: "Tipo de sesión", type: "select", options: ["Técnica", "Resistencia", "Velocidad", "Recuperación"] }
         ],
         history: [["distanceMeters", "Distancia"], ["style", "Estilo"], ["sessionType", "Tipo de sesión"]]
+      },
+      "Ciclismo de montaña": {
+        fields: [
+          { key: "sessionType", label: "Tipo de entrenamiento", type: "select", options: ["Distancia", "Recreativo", "Subidas", "Competencia"] }
+        ],
+        history: [["sessionType", "Tipo de entrenamiento"]]
+      },
+      "Básquetbol": {
+        fields: [
+          { key: "sessionType", label: "Tipo de entrenamiento", type: "select", options: ["Físico", "Técnica", "Sistema", "Pliométricos"] }
+        ],
+        history: [["sessionType", "Tipo de entrenamiento"]]
+      },
+      "Deportes de contacto": {
+        fields: [
+          { key: "sessionType", label: "Tipo de entrenamiento", type: "select", options: ["De golpeo (Striking)", "De agarre (Grappling)", "Mixtos"] }
+        ],
+        history: [["sessionType", "Tipo de entrenamiento"]]
       }
     };
 
@@ -6836,6 +6855,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260908-4"></script>
+  <script type="module" src="/js/production.js?v=20260908-5"></script>
 </body>
 </html>

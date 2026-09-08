@@ -15,6 +15,7 @@ let pendingTrainingPlan=null;
 let activityRows=[];
 let teacherStudentRows=[];
 const rankingSports=['Gimnasio','Calistenia','Running','Hiking','Tennis','Padel','Fútbol','Volleyball','Natación','Ciclismo de montaña','Caminata','Acondicionamiento físico','Básquetbol','Deportes de contacto','Otros'];
+function ensureGoalSportOptions(){const select=$('goalSport');if(!select)return;const previous=select.value,preferred=[previous,context.profile?.favorite_sport,productionSport,'Running'].find(value=>rankingSports.includes(value))||rankingSports[0];select.innerHTML=rankingSports.map(sport=>`<option value="${escape(sport)}">${escape(sport)}</option>`).join('');select.value=preferred;}
 const adviceThemes={
   Gimnasio:['controla la técnica antes de aumentar el peso','mantén estable el abdomen durante cada repetición','ajusta el rango de movimiento a tu movilidad','registra las cargas para progresar con orden','respeta el descanso entre series','equilibra ejercicios de empuje y tirón','calienta las articulaciones antes de cargar','prioriza repeticiones limpias sobre repeticiones rápidas','mantén una respiración continua','termina la serie si pierdes la postura'],
   Calistenia:['domina la progresión básica antes de avanzar','mantén el cuerpo alineado en cada ejercicio','cuida muñecas y hombros durante los apoyos','combina fuerza con movilidad','controla tanto la subida como la bajada','utiliza asistencias cuando sean necesarias','activa el abdomen durante las posiciones','evita llegar al fallo en todas las series','practica primero la calidad del movimiento','descansa lo suficiente entre intentos'],
@@ -58,7 +59,7 @@ function applyContext(){
 
 window.enviarMensajeIA=async function(message=$('coachInput')?.value){const text=String(message||'').trim();if(!text)return;window.appendCoachMessage?.('user',text,false);if($('coachInput'))$('coachInput').value='';try{let personalization=null;if(context.session&&$('coachLearningEnabled')?.checked){const d=await progressSnapshot().catch(()=>({}));personalization={favoriteSport:context.profile.favorite_sport,lastSport:d.last_sport,weeklyMinutes:d.minutes_week,totalMinutes:d.minutes_total,goal:pendingTrainingPlan?.purpose||'',availableMinutes:Number($('goalMinutes')?.value)||0};}const response=await fetch('/api/coach',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({message:text,personalization})});const data=await response.json();if(!response.ok)throw new Error(data.error||'No fue posible responder');const sources=(data.sources||[]).map(s=>`\n• ${s.title}: ${s.url}`).join('');window.appendCoachMessage?.('coach',`${data.reply}${sources}`,false);if(context.session&&$('coachLearningEnabled')?.checked){const s=await getSupabase();await s.from('assistant_preferences').upsert({user_id:context.profile.id,enabled:true,last_query:text,interests:{favorite_sport:context.profile.favorite_sport,last_sport:personalization?.lastSport},updated_at:new Date().toISOString()},{onConflict:'user_id'});}}catch(error){window.appendCoachMessage?.('coach',`⚠️ ${error.message}`,false);}};
 
-async function refreshContext(){ context=await currentContext(); applyContext(); renderAvatar(); return context; }
+async function refreshContext(){ context=await currentContext(); applyContext(); ensureGoalSportOptions(); renderAvatar(); return context; }
 
 async function onLogin(event){
   event.preventDefault(); event.stopImmediatePropagation(); const form=event.currentTarget; const button=form.querySelector('button[type=submit]'); busy(button,true,'Ingresando…');
@@ -227,6 +228,7 @@ let rankingRefreshTimer;
 function requestRankingRefresh(){clearTimeout(rankingRefreshTimer);rankingRefreshTimer=setTimeout(()=>renderRankings().catch(error=>toast(`❌ ${error.message}`,'error')),180);}
 document.addEventListener('click',event=>{const button=event.target.closest('[data-section="rankings"],[data-section="logros"]');if(!button)return;button.setAttribute('aria-busy','true');requestRankingRefresh();setTimeout(()=>button.removeAttribute('aria-busy'),900);},true);
 document.addEventListener('click',event=>{const section=event.target.closest('[data-section]')?.dataset.section;if(section==='perfil'&&context.profile?.role==='student')setTimeout(()=>renderConversation().catch(()=>null),180);if(context.profile?.role!=='teacher')return;if(section==='estadisticas'||section==='rankings')setTimeout(renderTeacherStatistics,180);if(section==='observaciones')setTimeout(()=>Promise.all([searchStudents(''),searchPasswordStudents()]),180);},true);
+document.addEventListener('click',event=>{if(event.target.closest('[data-section="objetivos"]'))setTimeout(ensureGoalSportOptions,180);},true);
 document.addEventListener('click',event=>{const button=event.target.closest('[data-section="blog"]');if(!button)return;button.setAttribute('aria-busy','true');setTimeout(()=>renderPosts().finally(()=>button.removeAttribute('aria-busy')),180);},true);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&context.session)requestRankingRefresh();});
 window.addEventListener('pageshow',()=>{if(context.session)requestRankingRefresh();});
@@ -242,4 +244,5 @@ $('studentObservationResults')?.addEventListener('click',e=>{const b=e.target.cl
 [$('teacherSentObservations'),$('studentObservationsList')].filter(Boolean).forEach(box=>box.addEventListener('click',async e=>{const b=e.target.closest('[data-cloud-edit-message]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();const message=prompt('Editar mensaje:');if(!message?.trim())return;try{await editOwnMessage(b.dataset.cloudEditMessage,message.trim());await renderConversation();toast('✅ Mensaje editado','success');}catch(error){toast(`❌ ${error.message}`,'error');}},true));
 
 // La base histórica queda disponible solo para preferencias visuales. Los flujos sensibles se interceptan arriba.
+ensureGoalSportOptions();
 boot();
