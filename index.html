@@ -606,6 +606,8 @@
       font-size: 2rem;
       line-height: 1;
     }
+    #activeStreak.streak-active{color:#16834a}
+    #activeStreak.streak-lost{color:#c52b35}
 
     .ranking-section {
       background: var(--blanco);
@@ -3555,6 +3557,12 @@
         <button class="sport-card" data-sport="Fútbol" style="--image:url('https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=900&q=85')"><span>Equipo</span><h3>Fútbol</h3></button>
         <button class="sport-card" data-sport="Volleyball" style="--image:url('https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=900&q=85')"><span>Potencia</span><h3>Volleyball</h3></button>
         <button class="sport-card" data-sport="Natación" style="--image:url('https://images.unsplash.com/photo-1530549387789-4c1017266635?auto=format&fit=crop&w=900&q=85')"><span>Técnica</span><h3>Natación</h3></button>
+        <button class="sport-card" data-sport="Ciclismo de montaña" style="--image:url('https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=900&q=85')"><span>Aventura sobre ruedas</span><h3>Ciclismo de montaña</h3></button>
+        <button class="sport-card" data-sport="Caminata" style="--image:url('https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=900&q=85')"><span>Movimiento diario</span><h3>Caminata</h3></button>
+        <button class="sport-card" data-sport="Acondicionamiento físico" style="--image:url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=900&q=85')"><span>Condición integral</span><h3>Acondicionamiento físico</h3></button>
+        <button class="sport-card" data-sport="Básquetbol" style="--image:url('https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=900&q=85')"><span>Coordinación y equipo</span><h3>Básquetbol</h3></button>
+        <button class="sport-card" data-sport="Deportes de contacto" style="--image:url('https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=900&q=85')"><span>Técnica y disciplina</span><h3>Deportes de contacto</h3></button>
+        <button class="sport-card" data-sport="Otros" style="--image:url('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=900&q=85')"><span>Tu actividad</span><h3>Otros</h3></button>
       </div>
 
       <article class="sport-detail" id="sportDetail" style="--sport-image:url('https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=1200&q=85')">
@@ -3583,6 +3591,7 @@
         </div>
         <div class="evidence-section">
           <h4>Aprende con evidencia</h4>
+          <button class="btn secondary" id="refreshEvidenceBtn" type="button">Actualizar</button>
           <p class="lead">Lecturas breves de fuentes científicas y organismos de salud confiables.</p>
           <div class="evidence-grid" id="evidenceGrid"></div>
         </div>
@@ -3595,10 +3604,13 @@
                 <label class="field">Tiempo<input id="activityMinutes" type="number" min="1" placeholder="Minutos"></label>
                 <label class="field">Intensidad<select id="activityIntensity"><option>Baja</option><option selected>Moderada</option><option>Alta</option><option>Muy alta</option></select></label>
                 <div class="dynamic-sport-fields" id="dynamicSportFields"></div>
+                <label class="field full" id="otherSportField" hidden>Nombre de la actividad deportiva
+                  <input id="otherSportName" type="text" maxlength="80" placeholder="Ejemplo: Patinaje, yoga o baile">
+                </label>
                 <label class="field full">Notas personales<textarea id="activityNotes" placeholder="¿Cómo te sentiste hoy?"></textarea></label>
                 <div class="evidence-upload">
                   <h4>📸 Evidencia del entrenamiento</h4>
-                  <p class="post-meta" id="evidenceRequirementText">La fotografía puede ser obligatoria según la configuración docente.</p>
+                  <p class="post-meta" id="evidenceRequirementText">La fotografía es obligatoria y se publicará automáticamente en Comunidad.</p>
                   <label class="field">Subir fotografía
                     <input id="activityEvidence" type="file" accept="image/*" capture="environment">
                   </label>
@@ -3982,6 +3994,42 @@
         dailyTip: "Exhala dentro del agua para controlar mejor tu respiración.",
         tips: ["Nunca entrenes solo.", "Mantén una respiración controlada.", "Trabaja primero la técnica."],
         quiz: "¿Cuántos carriles suele tener una alberca olímpica?", answers: ["6", "8", "10", "12"], feedback: "Excelente: 10 carriles. +10 XP"
+      },
+      "Ciclismo de montaña": {
+        phrase: "Cada sendero combina resistencia, control y aventura.",
+        image: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=1200&q=85",
+        dailyTip: "Revisa frenos, llantas y casco antes de entrar al sendero.",
+        tips: ["Mira hacia la trayectoria de salida.", "Modula ambos frenos con suavidad.", "Adapta la presión de las llantas al terreno."]
+      },
+      "Caminata": {
+        phrase: "Caminar con constancia también transforma tu salud.",
+        image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=1200&q=85",
+        dailyTip: "Mantén un paso cómodo y una postura erguida.",
+        tips: ["Usa calzado cómodo.", "Aumenta el tiempo gradualmente.", "Hidrátate en recorridos prolongados."]
+      },
+      "Acondicionamiento físico": {
+        phrase: "Fuerza, movilidad y resistencia construyen una condición completa.",
+        image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=85",
+        dailyTip: "Combina movimientos de fuerza y resistencia conservando una técnica limpia.",
+        tips: ["Calienta antes del circuito.", "Alterna grupos musculares.", "Regula la intensidad para completar cada bloque."]
+      },
+      "Básquetbol": {
+        phrase: "Lee la cancha, comparte el balón y muévete con intención.",
+        image: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=85",
+        dailyTip: "Flexiona las rodillas al recibir y mantén la vista en la cancha.",
+        tips: ["Practica el bote con ambas manos.", "Aterriza con control.", "Comunícate en defensa."]
+      },
+      "Deportes de contacto": {
+        phrase: "La disciplina y el control son tan importantes como la potencia.",
+        image: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=1200&q=85",
+        dailyTip: "Entrena con supervisión y utiliza siempre la protección adecuada.",
+        tips: ["Prioriza la técnica.", "Respeta a tu compañero.", "Detente ante mareo o dolor inusual."]
+      },
+      "Otros": {
+        phrase: "Toda actividad deportiva cuenta cuando se practica con seguridad.",
+        image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=85",
+        dailyTip: "Describe tu actividad y adapta la intensidad a tu condición.",
+        tips: ["Calienta antes de empezar.", "Utiliza el equipo adecuado.", "Progresa de manera gradual."]
       }
     };
 
@@ -5260,7 +5308,7 @@
     window.mostrarMenuSegunRol = mostrarMenuSegunRol;
     window.redirigirSegunRol = redirigirSegunRol;
 
-    const rankingSports = ["Gimnasio", "Calistenia", "Running", "Hiking", "Tennis", "Padel", "Fútbol", "Volleyball", "Natación"];
+    const rankingSports = ["Gimnasio", "Calistenia", "Running", "Hiking", "Tennis", "Padel", "Fútbol", "Volleyball", "Natación", "Ciclismo de montaña", "Caminata", "Acondicionamiento físico", "Básquetbol", "Deportes de contacto", "Otros"];
 
     const sportCaloriesBase = {
       "Gimnasio": 6,
@@ -5271,7 +5319,13 @@
       "Padel": 7,
       "Fútbol": 9,
       "Volleyball": 6,
-      "Natación": 10
+      "Natación": 10,
+      "Ciclismo de montaña": 9,
+      "Caminata": 4,
+      "Acondicionamiento físico": 8,
+      "Básquetbol": 9,
+      "Deportes de contacto": 9,
+      "Otros": 6
     };
 
     const intensityMultipliers = {
@@ -6190,6 +6244,7 @@
         document.getElementById("sportPhrase").textContent = data.phrase;
         document.getElementById("sportDailyTip").textContent = data.dailyTip;
         document.getElementById("sportTips").innerHTML = data.tips.map(item => `<li>${item}</li>`).join("");
+        document.getElementById("otherSportField").hidden = name !== "Otros";
         renderQuiz(name, getQuizStartIndex(name));
         document.getElementById("sportVideo").href = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " técnica entrenamiento")}`;
         detail.style.setProperty("--sport-image", `url("${data.image}")`);
@@ -6760,6 +6815,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260906-8"></script>
+  <script type="module" src="/js/production.js?v=20260908-1"></script>
 </body>
 </html>

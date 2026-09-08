@@ -1,11 +1,12 @@
 import { getSupabase, assertOk } from './supabase.js';
 import { uploadUserImage } from './images.js';
 
-const met = { Gimnasio:6,Calistenia:5.5,Running:9,Hiking:6.5,Tennis:7.3,Padel:6.5,'Fútbol':8,Volleyball:6,'Natación':8 };
+const met = { Gimnasio:6,Calistenia:5.5,Running:9,Hiking:6.5,Tennis:7.3,Padel:6.5,'Fútbol':8,Volleyball:6,'Natación':8,'Ciclismo de montaña':8.5,Caminata:3.8,'Acondicionamiento físico':7,'Básquetbol':8,'Deportes de contacto':8,'Otros':5.5 };
 const intensity = { Baja:.75,Moderada:1,Alta:1.2,'Muy alta':1.4 };
 export function calculateCalories(activity, weightKg = 70) {
   const kg = Math.min(300, Math.max(20, Number(weightKg) || 70));
-  return Math.max(0, Math.round(((met[activity.sport] || 5) * 3.5 * kg / 200) * Number(activity.minutes || 0) * (intensity[activity.intensity] || 1)));
+  const sportKey=String(activity.sport||'').startsWith('Otros:')?'Otros':activity.sport;
+  return Math.max(0, Math.round(((met[sportKey] || 5) * 3.5 * kg / 200) * Number(activity.minutes || 0) * (intensity[activity.intensity] || 1)));
 }
 export async function createActivity(activity, evidenceFile, evidenceRequired = false) {
   const supabase = await getSupabase();

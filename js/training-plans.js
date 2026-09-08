@@ -52,13 +52,49 @@ const templates={
     ['Resistencia','Bloques continuos a ritmo cómodo','Series medias/largas','1200–3000 m'],
     ['Velocidad','Repeticiones cortas con recuperación completa','8–16 repeticiones','800–1800 m'],
     ['Recuperación','Nado suave, patada y movilidad','Técnica relajada','600–1200 m']
+  ],
+  'Ciclismo de montaña':[
+    ['Técnica de sendero','Frenado, curvas, equilibrio y elección de línea','4–8 bloques técnicos','8–16 km'],
+    ['Resistencia','Rodaje continuo en terreno mixto','Ritmo sostenible','12–30 km'],
+    ['Subidas','Ascensos progresivos con recuperación','5–10 repeticiones','10–22 km'],
+    ['Recuperación','Rodaje fácil y movilidad de cadera','Carga baja','6–12 km']
+  ],
+  'Caminata':[
+    ['Paso base','Caminata cómoda con postura y braceo natural','Ritmo conversacional','2–6 km'],
+    ['Ritmo activo','Bloques de paso rápido y recuperación','6–10 intervalos','3–7 km'],
+    ['Ruta larga','Paso constante con pausas breves','Volumen progresivo','5–12 km'],
+    ['Recuperación','Caminata suave y movilidad','Carga baja','1–4 km']
+  ],
+  'Acondicionamiento físico':[
+    ['Circuito integral','Sentadilla, empuje, tirón, bisagra y core','3–5 rondas','—'],
+    ['Resistencia muscular','Movimientos globales por intervalos','6–10 bloques','—'],
+    ['Agilidad y coordinación','Desplazamientos, equilibrio y cambios de dirección','4–8 circuitos','—'],
+    ['Recuperación','Movilidad general y cardio suave','Carga baja','—']
+  ],
+  'Básquetbol':[
+    ['Técnica individual','Bote, pase, paradas y lanzamiento','5–8 bloques','—'],
+    ['Desplazamientos','Cambios de dirección, defensa y aceleraciones','6–10 repeticiones','2–5 km'],
+    ['Juego aplicado','Situaciones reducidas y transiciones','4–8 bloques','—'],
+    ['Recuperación','Tiros suaves y movilidad de tobillo','Carga baja','—']
+  ],
+  'Deportes de contacto':[
+    ['Técnica básica','Guardia, desplazamientos y acciones controladas','4–8 bloques','—'],
+    ['Condición específica','Intervalos de técnica sin contacto fuerte','6–10 rondas','—'],
+    ['Coordinación','Sombra, precisión y reacción','4–8 bloques','—'],
+    ['Recuperación','Movilidad y técnica a baja intensidad','Carga baja','—']
+  ],
+  'Otros':[
+    ['Técnica base','Fundamentos seguros de la actividad seleccionada','4–8 bloques','—'],
+    ['Resistencia','Práctica continua a intensidad moderada','Volumen progresivo','—'],
+    ['Coordinación','Equilibrio, control y precisión','4–8 bloques','—'],
+    ['Recuperación','Práctica suave y movilidad específica','Carga baja','—']
   ]
 };
 const days=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const modifiers=['con pausa isométrica','con tempo controlado','en circuito técnico','con énfasis unilateral','con rango cómodo','con recuperación activa','por intervalos progresivos','con control de respiración'];
 const finishers=['movilidad específica','estabilidad del tronco','técnica a baja intensidad','vuelta a la calma guiada','coordinación y equilibrio','respiración y recuperación'];
 export function buildTrainingPlan({sport,level,purpose,weeklyMinutes,variation=0}){
-  const source=templates[sport]||templates.Running;
+  const source=templates[sport]||(String(sport).startsWith('Otros:')?templates.Otros:templates.Running);
   const sessions=level==='Principiante'?3:level==='Intermedio'?4:5;
   const minutes=Math.max(30,Number(weeklyMinutes)||150);
   const perSession=Math.max(20,Math.round(minutes/sessions/5)*5);
