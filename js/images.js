@@ -1,13 +1,35 @@
 export async function compressImageBeforeUpload(file, options = {}) {
   if (!(file instanceof File) || !file.type.startsWith('image/')) throw new Error('Selecciona una imagen válida.');
   const { maxDimension = 1600, targetBytes = 500 * 1024, minQuality = .55 } = options;
-  const bitmap = await createImageBitmap(file);
-  const scale = Math.min(1, maxDimension / Math.max(bitmap.width, bitmap.height));
+  let source;
+  let releaseSource = () => {};
+  try {
+    if (typeof createImageBitmap !== 'function') throw new Error('createImageBitmap no disponible');
+    source = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    releaseSource = () => source.close?.();
+  } catch (bitmapError) {
+    const objectUrl = URL.createObjectURL(file);
+    try {
+      source = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error('El dispositivo no pudo leer la fotografía seleccionada.'));
+        image.src = objectUrl;
+      });
+      releaseSource = () => URL.revokeObjectURL(objectUrl);
+    } catch (fallbackError) {
+      URL.revokeObjectURL(objectUrl);
+      throw new Error('No fue posible procesar esta fotografía. Intenta tomarla nuevamente desde la cámara o elige otra imagen.');
+    }
+  }
+  const sourceWidth = source.width || source.naturalWidth;
+  const sourceHeight = source.height || source.naturalHeight;
+  const scale = Math.min(1, maxDimension / Math.max(sourceWidth, sourceHeight));
   const canvas = document.createElement('canvas');
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-  canvas.getContext('2d', { alpha: false }).drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  bitmap.close();
+  canvas.width = Math.max(1, Math.round(sourceWidth * scale));
+  canvas.height = Math.max(1, Math.round(sourceHeight * scale));
+  canvas.getContext('2d', { alpha: false }).drawImage(source, 0, 0, canvas.width, canvas.height);
+  releaseSource();
   const mime = canvas.toDataURL('image/webp').startsWith('data:image/webp') ? 'image/webp' : 'image/jpeg';
   let quality = .84;
   let blob;

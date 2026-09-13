@@ -6323,7 +6323,7 @@
         submitButton.textContent = "Conectando…";
       }
       try {
-        await import("/js/production.js?v=20260908-6");
+        await import("/js/production.js?v=20260912-1");
         if (!window.__SUMANDO_LOGIN_READY__) throw new Error("el módulo de acceso no inició");
         event.currentTarget.requestSubmit();
       } catch (error) {
@@ -6856,6 +6856,6 @@
       lucide.createIcons();
     }
   </script>
-  <script type="module" src="/js/production.js?v=20260908-6"></script>
+  <script type="module" src="/js/production.js?v=20260912-1"></script>
 </body>
 </html>

@@ -1,11 +1,11 @@
 import { getSupabase } from './supabase.js';
-import { signUp, signIn, signOut, sendPasswordReset, updatePassword, currentContext } from './auth.js?v=20260906-3';
-import { calculateCalories, createActivity, listMyActivities } from './activities.js?v=20260908-1';
+import { signUp, signIn, signOut, sendPasswordReset, updatePassword, currentContext } from './auth.js?v=20260912-1';
+import { calculateCalories, createActivity, listMyActivities } from './activities.js?v=20260912-1';
 import { teacherStudents } from './data.js';
 import { saveGoal, saveQuiz, saveArticle } from './data.js';
-import { createPost, listPosts, comment, rate } from './community.js';
+import { createPost, listPosts, comment, rate } from './community.js?v=20260912-1';
 import { listConversation, sendMessage, editOwnMessage } from './messages.js';
-import { uploadUserImage } from './images.js';
+import { uploadUserImage } from './images.js?v=20260912-1';
 import { buildTrainingPlan } from './training-plans.js?v=20260908-1';
 
 let context={session:null,profile:null};

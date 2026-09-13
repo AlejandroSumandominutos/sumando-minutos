@@ -1,5 +1,5 @@
 import { getSupabase, assertOk } from './supabase.js';
-import { uploadUserImage } from './images.js';
+import { uploadUserImage } from './images.js?v=20260912-1';
 
 const met = { Gimnasio:6,Calistenia:5.5,Running:9,Hiking:6.5,Tennis:7.3,Padel:6.5,'Fútbol':8,Volleyball:6,'Natación':8,'Ciclismo de montaña':8.5,Caminata:3.8,'Acondicionamiento físico':7,'Básquetbol':8,'Deportes de contacto':8,'Otros':5.5 };
 const intensity = { Baja:.75,Moderada:1,Alta:1.2,'Muy alta':1.4 };
